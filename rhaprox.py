@@ -16,9 +16,13 @@ def Gn(alpha,t,n):
 def func(x,y):
     return (x**2) * y
 
-n = 100000
-alpha = 2
+alpha = 0.9
 
-res, _ =  sc.integrate.quad(lambda t: np.absolute(Gn(alpha,t,n))**2,-np.inf,np.inf)
+values = [1000,2000,3000,4000,5000,6000,7000,8000,9000,10000]
 
-print(res)
+
+for n in values:
+    res = 0
+    res, _ =  sc.integrate.quad(lambda t: np.absolute(Gn(alpha,t,n))**2,-np.inf,np.inf)
+
+    print("n = " + str(n) + " | ","Integral =", str(res))
