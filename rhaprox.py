@@ -9,7 +9,6 @@ def H(alpha,t,k):
 def Gn(alpha,t,n):
     res = 0
     for k in range(2,n):
-        print(k)
         res += (mobius_function(k)/k) * H(alpha,t,k)
 
     return res + 1/(alpha + t*1j)
