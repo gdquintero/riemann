@@ -26,7 +26,7 @@ results = []
 
 alpha = 2.
 
-for n in range(6000, 11000, 1000):
+for n in range(81000, 86000, 1000):
 
     start = time.time() # Marca el tiempo de inicio
     # Realizar la integración con scipy
@@ -44,5 +44,5 @@ for n in range(6000, 11000, 1000):
     results.append(f"{n} {alpha} {res} {total_time}\n")
 
 # Escribir todo al archivo en un solo paso
-with open("output2.txt", "w") as f:
+with open("output17.txt", "w") as f:
     f.writelines(results)

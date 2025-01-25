@@ -1,22 +1,48 @@
 import numpy as np
 import scipy as sc
+import time
 from prime_tools import mobius_function
 
 def H(alpha,t,k):
     s = alpha + t*1j
     return (1 - k**(1 - s)) * (sc.special.zeta(s) / s)
 
-def Gn(alpha,t,n):
-    res = 0
-    for k in range(2,n):
-        res += (mobius_function(k)/k) * H(alpha,t,k)
+def Gn(alpha, t, n):
+    # Precalcular valores de mobius_function(k) / k
+    k_vals = np.arange(2, n)
+    mobius_vals = np.array([mobius_function(k) for k in k_vals]) / k_vals
 
-    return res + 1/(alpha + t*1j)
+    # Vectorizar cálculo de H(alpha, t, k)
+    H_vals = np.array([H(alpha, t, k) for k in k_vals])
 
-with open("output6.txt","w") as f:
-    for n in range(60000,70000,1000):
-        for alpha in [0.6,0.7,0.8,0.9]:
-            res, err = 0, 0
-            res, err =  sc.integrate.quad(lambda t: np.absolute(Gn(alpha,t,n))**2,-np.inf,np.inf,epsrel=1e-12, epsabs=1e-15)
+    # Calcular la suma
+    res = np.sum(mobius_vals * H_vals)
 
-            f.write("%i %f %f %f\n" % (n,alpha,res,err))
+    # Añadir el término final
+    return res + 1 / (alpha + t * 1j)
+
+# Acumular resultados para escribir en un solo paso
+results = []
+
+alpha = 2.
+
+for n in range(26000, 31000, 1000):
+
+    start = time.time() # Marca el tiempo de inicio
+    # Realizar la integración con scipy
+    res, err = sc.integrate.quad(
+        lambda t: np.absolute(Gn(alpha, t, n)) ** 2,
+        -np.inf,
+        np.inf,
+        epsrel=1e-12,
+        epsabs=1e-15,
+    )
+
+    finish = time.time() # Marca el tiempo de finalizacion
+    total_time = finish - start
+    # Acumular resultado
+    results.append(f"{n} {alpha} {res} {total_time}\n")
+
+# Escribir todo al archivo en un solo paso
+with open("output6.txt", "w") as f:
+    f.writelines(results)
