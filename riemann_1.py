@@ -1,6 +1,6 @@
 import numpy as np
 import scipy as sc
-from tools import mobius_function
+from prime_tools import mobius_function
 
 def H(alpha,t,k):
     s = alpha + t*1j
@@ -18,11 +18,11 @@ def func(x,y):
 
 alpha = 0.9
 
-values = [1000,2000,3000,4000,5000,6000,7000,8000,9000,10000]
+values = [1000]
 
 
 for n in values:
-    res = 0
-    res, _ =  sc.integrate.quad(lambda t: np.absolute(Gn(alpha,t,n))**2,-np.inf,np.inf)
+    res, err = 0, 0
+    res, err =  sc.integrate.quad(lambda t: np.absolute(Gn(alpha,t,n))**2,-np.inf,np.inf,epsrel=1e-12, epsabs=1e-15)
 
-    print("n = " + str(n) + " | ","Integral =", str(res))
+print(res,err)
