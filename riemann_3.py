@@ -13,16 +13,10 @@ def Gn(alpha,t,n):
 
     return res + 1/(alpha + t*1j)
 
-def func(x,y):
-    return (x**2) * y
+with open("output3.txt","w") as f:
+    for n in range(30000,40000,1000):
+        for alpha in [0.6,0.7,0.8,0.9]:
+            res, err = 0, 0
+            res, err =  sc.integrate.quad(lambda t: np.absolute(Gn(alpha,t,n))**2,-np.inf,np.inf,epsrel=1e-12, epsabs=1e-15)
 
-alpha = 0.9
-
-values = [1000]
-
-
-for n in values:
-    res, err = 0, 0
-    res, err =  sc.integrate.quad(lambda t: np.absolute(Gn(alpha,t,n))**2,-np.inf,np.inf,epsrel=1e-12, epsabs=1e-15)
-
-print(res,err)
+            f.write("%i %f %f %f\n" % (n,alpha,res,err))
