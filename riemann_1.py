@@ -25,7 +25,7 @@ def Gn(alpha, t, n):
 # Acumular resultados para escribir en un solo paso
 results = []
 
-alpha = 2.
+alpha = 0.9
 
 for n in range(1000, 6000, 1000):
 
@@ -35,8 +35,8 @@ for n in range(1000, 6000, 1000):
         lambda t: np.absolute(Gn(alpha, t, n)) ** 2,
         -np.inf,
         np.inf,
-        epsrel=1e-12,
-        epsabs=1e-15,
+        epsrel=1e-8,
+        epsabs=1e-8,
     )
 
     finish = time.time() # Marca el tiempo de finalizacion

@@ -25,9 +25,13 @@ def Gn(alpha, t, n):
 # Acumular resultados para escribir en un solo paso
 results = []
 
-alpha = 2.
+alpha = 0.9
 
-for n in range(1, 1000, 10):
+test = np.arange(100,1000,100)
+test = np.insert(test,0,np.arange(1,10))
+test = np.insert(test,9,np.arange(10,100,10))
+
+for n in test:
 
     start = time.time() # Marca el tiempo de inicio
     # Realizar la integración con scipy
@@ -35,8 +39,8 @@ for n in range(1, 1000, 10):
         lambda t: np.absolute(Gn(alpha, t, n)) ** 2,
         -np.inf,
         np.inf,
-        epsrel=1e-12,
-        epsabs=1e-15,
+        epsrel=1e-8,
+        epsabs=1e-8,
     )
 
     finish = time.time() # Marca el tiempo de finalizacion
@@ -45,7 +49,7 @@ for n in range(1, 1000, 10):
     results.append(f"{n} {alpha} {res} {total_time}\n")
 
 # Escribir todo al archivo en un solo paso
-with open("output1.txt", "w") as f:
+with open("output1_1000.txt", "w") as f:
     f.writelines(results)
 
 
