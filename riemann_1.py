@@ -25,7 +25,7 @@ def Gn(alpha, t, n):
 # Acumular resultados para escribir en un solo paso
 results = []
 
-alpha = 0.9
+alpha = float(np.loadtxt("alpha.txt"))
 
 for n in range(1000, 6000, 1000):
 

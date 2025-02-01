@@ -3,6 +3,7 @@
 import subprocess
 
 # Ejecutar dos programas al mismo tiempo
+p0 = subprocess.Popen(["python", "riemann_1_1000.py"])
 p1 = subprocess.Popen(["python", "riemann_1.py"])
 p2 = subprocess.Popen(["python", "riemann_2.py"])
 p3 = subprocess.Popen(["python", "riemann_3.py"])
