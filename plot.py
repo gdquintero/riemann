@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 size_img = 0.6
-plt.rcParams.update({'font.size': 10})
+plt.rcParams.update({'font.size': 8})
 plt.rcParams['figure.figsize'] = [size_img * 6.4,size_img * 4.8]
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
@@ -23,12 +23,24 @@ y3 = data3[:,2]
 
 
 plt.plot(x1,y1,":o",ms=3,lw=1)
+plt.xlabel("$n$",fontsize=12)
+plt.ylabel("$s_n$",fontsize=12)
+# plt.ylim(-0.2,4)
+plt.yticks(np.arange(0.0,4.1,1))
 plt.savefig("alpha09/mnqfig1a.pdf",bbox_inches = "tight")
 plt.close()
 
 plt.plot(x2,y2,":o",ms=3,lw=1)
+plt.xlabel("$n$",fontsize=12)
+plt.ylabel("$s_n$",fontsize=12)
+# plt.ylim(-0.2,4)
+plt.yticks(np.arange(0.0,0.09,0.02))
 plt.savefig("alpha09/mnqfig1b.pdf",bbox_inches = "tight")
 plt.close()
 
 plt.plot(x3,y3,":o",ms=3,lw=1)
+plt.xlabel("$n$",fontsize=12)
+plt.ylabel("$s_n$",fontsize=12)
+# plt.ylim(-0.2,4)
+plt.yticks(np.arange(0.0,0.0021,0.0005))
 plt.savefig("alpha09/mnqfig1c.pdf",bbox_inches = "tight")
