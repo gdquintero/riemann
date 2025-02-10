@@ -30,7 +30,7 @@ max_iter = int(param[0])
 max_time = int(param[1])
 points   = int(param[2])
 
-tol = 5e-3
+tol = 5e-1
 
 # Generamos particion del intervalo cerrado [0.5,1]
 partition = np.linspace(0.5,1,points)

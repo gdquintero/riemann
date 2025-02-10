@@ -24,13 +24,13 @@ def Gn(alpha, t, n):
 # Acumular resultados para escribir en un solo paso
 results = []
 
+param = np.loadtxt("parameters.txt")
+
+max_iter = int(param[0])
+max_time = int(param[1])
+points   = int(param[2])
+
 tol = 5e-2
-max_iter = 1000
-
-# Tiempo máximo 10 min
-max_time = 60 * 10
-
-points = 100
 
 # Generamos particion del intervalo cerrado [0.5,1]
 partition = np.linspace(0.5,1,points)
@@ -43,15 +43,7 @@ for alpha in partition:
     res = np.inf
 
     while True:
-        if time.time() - start > max_time:
-            break
-        elif iter > max_iter:
-            break
-        elif res <= tol:
-            break
         n += 1
-        iter += 1
-        
         # Realizar la integración con scipy
         res, err = sc.integrate.quad(
             lambda t: np.absolute(Gn(alpha, t, n)) ** 2,
@@ -60,6 +52,14 @@ for alpha in partition:
             epsrel=1e-8,
             epsabs=1e-8,
         )  
+
+        if time.time() - start > max_time:
+            break
+        elif n > max_iter:
+            break
+        elif res <= tol:
+            break
+        
 
     finish = time.time() # Marca el tiempo de finalizacion
     total_time = finish - start
