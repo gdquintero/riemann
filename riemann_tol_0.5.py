@@ -67,7 +67,7 @@ for alpha in partition:
     results.append(f"{alpha} {res} {n} {total_time}\n")
 
     # Escribir todo al archivo en un solo paso
-    with open("output_tol_0.05.txt", "w") as f:
+    with open("output_tol_0.5.txt", "w") as f:
         f.writelines(results)
 
     start, finish = 0, 0

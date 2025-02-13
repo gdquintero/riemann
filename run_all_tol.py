@@ -4,8 +4,9 @@ import subprocess
 import time
 
 # Ejecutar los programas al mismo tiempo
-p1 = subprocess.Popen(["python", "riemann_tol_0.05.py"])
-p2 = subprocess.Popen(["python", "riemann_tol_0.005.py"])
+p1 = subprocess.Popen(["python", "riemann_tol_0.5.py"])
+p2 = subprocess.Popen(["python", "riemann_tol_0.05.py"])
+p3 = subprocess.Popen(["python", "riemann_tol_0.005.py"])
 p3 = subprocess.Popen(["python", "riemann_tol_0.0005.py"])
 
 # Lista de procesos
