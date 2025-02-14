@@ -30,10 +30,10 @@ max_iter = int(param[0])
 max_time = int(param[1])
 points   = int(param[2])
 
-tol = 5e-1
+tol = 5e-2
 
 # Generamos particion del intervalo cerrado [0.5,1]
-partition = np.linspace(0.5,1,points)
+partition = np.linspace(0.9,1,points)
 
 for alpha in partition:
 
@@ -67,7 +67,7 @@ for alpha in partition:
     results.append(f"{alpha} {res} {n} {total_time}\n")
 
     # Escribir todo al archivo en un solo paso
-    with open("output_tol_0.5.txt", "w") as f:
+    with open("output_tol_0.05.txt", "w") as f:
         f.writelines(results)
 
     start, finish = 0, 0

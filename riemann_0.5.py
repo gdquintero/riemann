@@ -7,6 +7,7 @@ def H(alpha,t,k):
     s = alpha + t*1j
     return (1 - k**(1 - s)) * (sc.special.zeta(s) / s)
 
+# Sumas parciales de los Hk
 def Gn(alpha, t, n):
     # Precalcular valores de mobius_function(k) / k
     k_vals = np.arange(2, n)
@@ -30,10 +31,10 @@ max_iter = int(param[0])
 max_time = int(param[1])
 points   = int(param[2])
 
-tol = 5e-4
+tol = 5e-1
 
 # Generamos particion del intervalo cerrado [0.5,1]
-partition = np.linspace(0.5,1,points)
+partition = np.linspace(0.9,1,points)
 
 for alpha in partition:
 
@@ -67,7 +68,7 @@ for alpha in partition:
     results.append(f"{alpha} {res} {n} {total_time}\n")
 
     # Escribir todo al archivo en un solo paso
-    with open("output_tol_0.0005.txt", "w") as f:
+    with open("output_tol_0.5.txt", "w") as f:
         f.writelines(results)
 
     start, finish = 0, 0
