@@ -53,9 +53,9 @@ for alpha in partition:
             epsabs=1e-8,
         )  
 
-        if time.time() - start > max_time:
+        if time.time() - start >= max_time:
             break
-        elif n > max_iter:
+        elif n >= max_iter:
             break
         elif res <= tol:
             break
