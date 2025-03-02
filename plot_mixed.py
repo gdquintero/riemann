@@ -77,4 +77,3 @@ data2 = np.loadtxt(folder+"/output_tol_0.005.txt",delimiter=" ")
 data3 = np.loadtxt(folder+"/output_tol_0.0005.txt",delimiter=" ")
 
 plot(data1,data2,data3)
-
