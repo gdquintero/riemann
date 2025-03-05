@@ -25,23 +25,3 @@ p18 = subprocess.Popen(["python", "riemann_18.py"])
 p19 = subprocess.Popen(["python", "riemann_19.py"])
 p20 = subprocess.Popen(["python", "riemann_20.py"])
 
-# Lista de procesos
-processes = [p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,20]
-
-try:
-    while True:
-        # Verificar si algún proceso sigue en ejecución
-        running = any(process.poll() is None for process in processes)
-        if not running:
-            break  # Salir del bucle si todos los procesos han terminado
-
-        # Mostrar mensaje de "Rodando"
-        print("Rodando...", end="\r", flush=True)
-        time.sleep(1)  # Esperar 1 segundo antes de verificar nuevamente
-except KeyboardInterrupt:
-    print("\nInterrumpido por el usuario. Terminando procesos...")
-    for process in processes:
-        process.terminate()
-
-# Confirmar que han terminado
-print("Todos los programas han finalizado.")
