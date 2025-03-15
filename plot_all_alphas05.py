@@ -10,10 +10,17 @@ plt.rc('font', family='serif')
 plt.tick_params(axis='both', direction='in')
 
 # Cargar datos
-data_files = ["alpha05/output_050.txt", "alpha053/output_053.txt",
-              "alpha056/output_056.txt"]
+data_files = ["alpha05/output_050.txt", "alpha051/output_051.txt",
+              "alpha052/output_052.txt", "alpha053/output_053.txt",
+              "alpha054/output_054.txt", "alpha055/output_055.txt",
+              "alpha056/output_056.txt", "alpha057/output_057.txt",
+              "alpha058/output_058.txt", "alpha059/output_059.txt"]
                
-labels = [r"$\alpha = 0.50$", r"$\alpha = 0.53$", r"$\alpha = 0.56$"]
+labels = [r"$\alpha = 0.50$", r"$\alpha = 0.51$", 
+          r"$\alpha = 0.52$", r"$\alpha = 0.53$",
+          r"$\alpha = 0.54$", r"$\alpha = 0.55$",
+          r"$\alpha = 0.56$", r"$\alpha = 0.57$",
+          r"$\alpha = 0.58$", r"$\alpha = 0.59$"]
 
 # Crear figura y eje principal
 fig, ax = plt.subplots()

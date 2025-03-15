@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes, mark_inset
+import matplotlib.colors as colors
+import matplotlib.cm as mplcm
 
 size_img = 1
 plt.rcParams.update({'font.size': 12})
@@ -8,6 +10,11 @@ plt.rcParams['figure.figsize'] = [size_img * 10, size_img * 6]
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
 plt.tick_params(axis='both', direction='in')
+NUM_COLORS = 10
+cm = plt.get_cmap('rainbow')
+cNorm  = colors.Normalize(vmin=0, vmax=NUM_COLORS+1)
+scalarMap = mplcm.ScalarMappable(norm=cNorm, cmap=cm)
+
 
 # Cargar datos
 data_files = ["alpha09/output_090.txt", "alpha091/output_091.txt",
@@ -24,6 +31,8 @@ labels = [r"$\alpha = 0.90$", r"$\alpha = 0.91$",
 
 # Crear figura y eje principal
 fig, ax = plt.subplots()
+
+ax.set_prop_cycle(color=[scalarMap.to_rgba(NUM_COLORS-i) for i in range(NUM_COLORS)])
 
 # Dibujar las curvas en el eje principal
 for i, file in enumerate(data_files):
