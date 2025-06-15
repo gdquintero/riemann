@@ -33,7 +33,9 @@ points   = int(param[2])
 tol = 5e-2
 
 # Generamos particion del intervalo cerrado [0.5,1]
-partition = np.linspace(0.5,0.95,points)
+partition = np.linspace(0.5,0.995,points)
+
+print(partition)
 
 for alpha in partition:
 
