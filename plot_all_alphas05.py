@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1.inset_locator import inset_axes, mark_inset
 
 size_img = 1
 plt.rcParams.update({'font.size': 12})
@@ -9,63 +8,33 @@ plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
 plt.tick_params(axis='both', direction='in')
 
+# Cargar datos (aquí se asume que cada archivo tiene datos tipo columnas con x, y, etc.)
 # Cargar datos
 data_files = ["alpha05/output_050.txt", "alpha051/output_051.txt",
               "alpha052/output_052.txt", "alpha053/output_053.txt",
               "alpha054/output_054.txt", "alpha055/output_055.txt",
-              "alpha056/output_056.txt", "alpha057/output_057.txt",
+              "alpha056/output_056.txt", "alpha057/output_057.txt", 
               "alpha058/output_058.txt", "alpha059/output_059.txt"]
-               
+
 labels = [r"$\alpha = 0.50$", r"$\alpha = 0.51$", 
-          r"$\alpha = 0.52$", r"$\alpha = 0.53$",
+          r"$\alpha = 0.52$", r"$\alpha = 0.53$", 
           r"$\alpha = 0.54$", r"$\alpha = 0.55$",
           r"$\alpha = 0.56$", r"$\alpha = 0.57$",
           r"$\alpha = 0.58$", r"$\alpha = 0.59$"]
 
-# Crear figura y eje principal
-fig, ax = plt.subplots()
-
-# Dibujar las curvas en el eje principal
+# Graficar
 for i, file in enumerate(data_files):
     data = np.loadtxt(file, delimiter=" ")
-    ax.plot(data[:, 0], data[:, 2], lw=0.7, label=labels[i])
+    plt.plot(data[:, 0], data[:, 2], lw=0.5, label=labels[i])
 
-# # Insertar el zoom en la esquina superior derecha
-# axins = inset_axes(ax, width="40%", height="30%", loc="upper center")
+plt.grid(True, linestyle="--", lw=0.5, alpha=0.6)
 
-# # Dibujar las mismas curvas en el zoom (sin etiquetas para evitar duplicar la leyenda)
-# for file in data_files:
-#     data = np.loadtxt(file, delimiter=" ")
-#     axins.plot(data[:, 0], data[:, 2], lw=0.8)  # Línea ligeramente más gruesa en el zoom
-
-# # Definir la región de zoom
-# # axins.set_xlim(73000, 90000)
-# # axins.set_ylim(0, 0.0002)
-
-# # Quitar etiquetas y ticks del zoom
-# axins.set_xticklabels([])
-# axins.set_yticklabels([])
-# axins.set_xticks([])
-# axins.set_yticks([])
-
-# # Dibujar el cuadro rojo con transparencia
-# mark_inset(ax, axins, loc1=3, loc2=1, fc="red", alpha=0.2, ec="none")
-
-# # Dibujar las líneas de conexión en negro sólido
-# mark_inset(ax, axins, loc1=3, loc2=1, fc="none", ec="k", lw=0.5,alpha=0.5)
-
-# Etiquetas y límites de los ejes
-ax.set_xlabel(r"$n$", fontsize=16)
-ax.set_ylabel(r"$s_n$", fontsize=16)
-# ax.set_xlim(-500, 100500)
-# ax.set_ylim(-0.00005, 0.0025)
-
-# Agregar grid
-ax.grid(True, linestyle="--", alpha=0.6)
+plt.xlabel(r"$n$", fontsize=16)
+plt.ylabel(r"$s_n$", fontsize=16)
+plt.xlim(-500, 100500)
+# plt.ylim(-0.00005, 0.0023)
 
 # Agregar leyenda mejorada
-ax.legend(loc="upper left", fontsize=10, frameon=True, edgecolor="black",fancybox=False)
-
-# Guardar la figura
+plt.legend(loc="upper left", fontsize=10, frameon=True, edgecolor="black",fancybox=False)
 plt.savefig("alpha05.pdf", bbox_inches="tight")
 plt.show()
