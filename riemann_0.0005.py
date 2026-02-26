@@ -47,11 +47,13 @@ for alpha in partition:
         # Realizar la integración con scipy
         res, err = sc.integrate.quad(
             lambda t: np.absolute(Gn(alpha, t, n)) ** 2,
-            -np.inf,
+            0.,
             np.inf,
             epsrel=1e-8,
             epsabs=1e-8,
         )  
+
+        res *= 2.
 
         if time.time() - start > max_time:
             break

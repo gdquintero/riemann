@@ -18,23 +18,22 @@ def Gn(alpha, t, n):
 
     # Calcular la suma
     res = np.sum(mobius_vals * H_vals)
+    res += 1 / (alpha + t * 1j)
 
     # Añadir el término final
-    return res + 1 / (alpha + t * 1j)
+    return res 
 
 # Acumular resultados para escribir en un solo paso
 results = []
 
-param = np.loadtxt("parameters.txt")
-
-max_iter = int(param[0])
-max_time = int(param[1])
-points   = int(param[2])
+max_iter = 1000
+max_time = 3600
+points   = 1
 
 tol = 5e-1
 
 # Generamos particion del intervalo cerrado [0.5,1]
-partition = np.linspace(0.9,1,points)
+partition = np.linspace(0.8,1,points)
 
 for alpha in partition:
 
@@ -73,3 +72,7 @@ for alpha in partition:
 
     start, finish = 0, 0
 
+
+print(res)
+print(n)
+print(total_time)

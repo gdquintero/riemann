@@ -38,3 +38,4 @@ def mobius_function(n):
             return -1
     else:
         return 0
+    
