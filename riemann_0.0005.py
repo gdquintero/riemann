@@ -53,7 +53,7 @@ for alpha in partition:
             epsabs=1e-8,
         )  
 
-        res *= 2.
+        res /= np.pi 
 
         if time.time() - start > max_time:
             break
