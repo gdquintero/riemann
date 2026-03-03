@@ -19,7 +19,7 @@ program riemann
     
     call H(alpha,t,k,x,w,nodes,interval,hk)
 
-    print*, hk
+    print*, pi
 
     contains
 
@@ -33,7 +33,7 @@ program riemann
         complex(dp),    intent(in) :: s
         real(dp),       intent(inout) :: x(:), w(:), interval(:)
         complex(dp),    intent(out) :: zeta
-        real(dp), parameter :: pi = 4.d0 * atan(1.d0) 
+        real(dp), parameter :: pi = 3.1415926535897932
 
         complex(dp) :: a,xi
 
@@ -57,17 +57,17 @@ program riemann
         complex(dp),    intent(out) :: xi
 
         complex(dp) :: a,b,quad,term1,term2
-        real(dp) :: u,du,psi_u,logu
+        real(dp) :: u,jac,psi_u,logu
         integer :: i
 
-        a = -0.5_dp*s - 0.5_dp
-        b =  0.5_dp*s - 1.0_dp
+        a = -0.5_dp * (s + 1.0_dp)
+        b =  0.5_dp * s - 1.0_dp
 
         quad = (0.0_dp, 0.0_dp)
 
         do i = 1, nodes
             u = 1.0_dp/(1.0_dp - x(i))
-            du = 1.0_dp/(1.0_dp - x(i))**2  
+            jac = 1.0_dp/(1.0_dp - x(i))**2  
             logu = log(u)
 
             term1 = exp(a * logu)    ! u^(-s/2-1/2)
@@ -75,11 +75,29 @@ program riemann
 
             call psi(u,psi_u)
 
-            quad = quad + (term1 + term2) * psi_u * du * w(i)
+            quad = quad + (term1 + term2) * psi_u * jac * w(i)
         end do
 
         xi = 1.0_dp/(s - 1.0_dp) - 1.0_dp/s + quad
     end subroutine xi_quad
+
+    subroutine norm_hardy(alpha,x,w,nodes,res)
+        use stdlib_kinds, only: dp
+        implicit none
+
+        real(dp),    intent(in)  :: alpha
+        real(dp),    intent(in)  :: x(:), w(:)
+        integer,     intent(in)  :: nodes
+        real(dp),    intent(out) :: res
+
+        integer :: i
+        real(dp) :: t, jac
+        complex(dp) :: s, Fva
+        real(dp), parameter :: pi = 3.1415926535897932
+
+
+
+    end subroutine norm_hardy
 
     subroutine mobius(n, mu)
         implicit none
