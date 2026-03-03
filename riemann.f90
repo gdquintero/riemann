@@ -205,4 +205,7 @@ program riemann
         hk = a * zeta / s
         
     end subroutine H
+
+    subroutine hardy_norm_Gn()
+    
 end program riemann
