@@ -1,34 +1,49 @@
 program riemann
     use stdlib_kinds, only: sp, dp, int64
-    use stdlib_specialfunctions_gamma, only: gamma
-    use stdlib_quadrature, only: gauss_legendre
 
     implicit none
 
     integer, parameter :: I128 = selected_int_kind(38)
     integer :: nodes
-    real(dp), allocatable :: x(:), w(:)
-    real(dp) :: interval(2)
-    complex(dp) :: s, xi
+    integer(I128) :: k
+    real(dp), allocatable :: x(:), w(:),interval(:)
+    complex(dp) :: s,hk
+    real(dp) :: alpha, t
 
     nodes = 256
-    allocate(x(nodes), w(nodes))
+    allocate(x(nodes), w(nodes),interval(2))
 
-    interval = [0.0_dp, 1.0_dp]
-    call gauss_legendre(x,w,interval)  
-
-    s = cmplx(0.5_dp, 14.0_dp, kind=dp)
-
-    call xi_quad(s,x,w,nodes,xi)
-
+    alpha = 2.0_dp
+    t = 3.0_dp
+    k = 100
     
+    call H(alpha,t,k,s,x,w,nodes,interval,hk)
 
     contains
 
-    subroutine zeta()
+    subroutine zeta_function(s,x,w,nodes,interval,zeta)
+        use stdlib_kinds, only: dp
+        use stdlib_quadrature, only: gauss_legendre
+        use stdlib_specialfunctions_gamma, only: gamma
         implicit none
 
-    end subroutine zeta
+        integer,        intent(in) :: nodes
+        complex(dp),    intent(in) :: s
+        real(dp),       intent(inout) :: x(:), w(:), interval(:)
+        complex(dp),    intent(out) :: zeta
+        real(dp), parameter :: pi = 4.d0 * atan(1.d0) 
+
+        complex(dp) :: a,xi
+
+        interval = [0.0_dp,1.0_dp]
+        a = 0.5_dp * s
+
+        call gauss_legendre(x,w,interval)
+        call xi_quad(s,x,w,nodes,xi)
+
+        zeta = exp( a * log(pi)) * xi / gamma(a)
+
+    end subroutine zeta_function
 
     subroutine xi_quad(s,x,w,nodes,xi)
         use stdlib_kinds, only: dp
@@ -145,20 +160,15 @@ program riemann
         end if
     end subroutine mobius
 
-    ! subroutine zeta(z,res)
-    !     implicit none
-
-
-    ! end subroutine zeta
-
     subroutine psi(u,res)
+        use stdlib_kinds, only: dp
         implicit none
 
-        real(kind=8),   intent(in) :: u
-        real(kind=8),   intent(out) :: res
+        real(dp),   intent(in) :: u
+        real(dp),   intent(out) :: res
         
-        real(kind=8), parameter :: tol = 1.d-8, pi = 4.d0 * atan(1.d0) 
-        real(kind=8) :: term
+        real(dp), parameter :: tol = 1.d-8, pi = 4.d0 * atan(1.d0) 
+        real(dp) :: term
         integer :: n, n_max
 
         res = 0.d0
@@ -174,13 +184,25 @@ program riemann
 
     end subroutine psi
 
-    
+    subroutine H(alpha,t,k,s,x,w,nodes,interval,hk)
+        use stdlib_kinds, only: dp
+        implicit none
 
-    ! subroutine H(alpha,t,n)
-    !     implicit none
+        integer, parameter :: I128 = selected_int_kind(38)
+        integer(I128),  intent(in)  :: k
+        integer,        intent(in) :: nodes
+        real(dp),       intent(in) :: alpha,t
+        complex(dp),    intent(out) :: hk
+        real(dp),       intent(inout) :: x(:), w(:), interval(:)
 
+        complex(dp) :: s,zeta,a
 
+        s = cmplx(alpha,t,kind=dp)
+        a = 1.0_dp - exp((1.0_dp - s) * log(real(k, dp)))
 
+        call zeta_function(s,x,w,nodes,interval,zeta)
+
+        hk = a * zeta / s
         
-    ! end subroutine H
+    end subroutine H
 end program riemann
