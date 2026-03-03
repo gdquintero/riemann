@@ -26,20 +26,21 @@ def Gn(alpha, t, n):
 # Acumular resultados para escribir en un solo paso
 results = []
 
-max_iter = 1000
+max_iter = 1
 max_time = 3600
 points   = 1
 
 tol = 5e-1
 
 # Generamos particion del intervalo cerrado [0.5,1]
-partition = np.linspace(0.8,1,points)
+# partition = np.linspace(0.8,1,points)
+partition = [0.8]
 
 for alpha in partition:
 
     start = time.time() # Marca el tiempo de inicio
     iter = 0
-    n = 0
+    n = 1
     res = np.inf
 
     while True:
@@ -75,4 +76,4 @@ for alpha in partition:
 
 print(res)
 print(n)
-print(total_time)
+# print(total_time)
