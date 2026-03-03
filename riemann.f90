@@ -17,7 +17,9 @@ program riemann
     t = 3.0_dp
     k = 100
     
-    call H(alpha,t,k,s,x,w,nodes,interval,hk)
+    call H(alpha,t,k,x,w,nodes,interval,hk)
+
+    print*, hk
 
     contains
 
@@ -51,7 +53,7 @@ program riemann
 
         integer,        intent(in) :: nodes
         complex(dp),    intent(in)  :: s
-        real(dp),       intent(in)  :: x(:), w(:)   ! ya vienen con tamaño N
+        real(dp),       intent(in)  :: x(:),w(:)
         complex(dp),    intent(out) :: xi
 
         complex(dp) :: a,b,quad,term1,term2
@@ -184,7 +186,7 @@ program riemann
 
     end subroutine psi
 
-    subroutine H(alpha,t,k,s,x,w,nodes,interval,hk)
+    subroutine H(alpha,t,k,x,w,nodes,interval,hk)
         use stdlib_kinds, only: dp
         implicit none
 
@@ -206,6 +208,6 @@ program riemann
         
     end subroutine H
 
-    subroutine hardy_norm_Gn()
+    ! subroutine hardy_norm_Gn()
     
 end program riemann
