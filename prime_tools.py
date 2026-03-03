@@ -38,4 +38,9 @@ def mobius_function(n):
             return -1
     else:
         return 0
+
+
+n = 3799666951 * 23496587 * 32413  
+m = mobius_function(n)
+print(m)
     
