@@ -1,6 +1,6 @@
 program riemann
-    use stdlib_kinds, only: sp, dp, int64
-    use stdlib_quadrature, only: gauss_legendre
+    use stdlib_kinds,                   only: sp, dp, int64
+    use stdlib_quadrature,              only: gauss_legendre
 
     implicit none
 
@@ -11,7 +11,7 @@ program riemann
     real(dp), allocatable :: x(:), w(:),interval(:)
     real(dp) :: alpha, norm
 
-    nodes = 256
+    nodes = 10
     allocate(x(nodes), w(nodes),interval(2))
 
     interval = [0.0_dp,1.0_dp]
@@ -22,51 +22,76 @@ program riemann
 
     call norm_hardy(alpha,n,x,w,nodes,norm)
 
-    print*, norm
+    ! print*, norm
     
 
     contains
 
-    subroutine norm_hardy(alpha,n,x,w,nodes,res)
+    subroutine norm_hardy(alpha,n,norm,ier)
         use stdlib_kinds, only: dp
+        use quadpack,     only: dqagi
+
         implicit none
+
         integer, parameter :: I128 = selected_int_kind(38)
-        real(dp),    intent(in)  :: alpha
-        real(dp),    intent(in)  :: x(:), w(:)
-        integer,     intent(in)  :: nodes
-        integer(I128), intent(in) :: n
-        real(dp),    intent(out) :: res
 
-        integer :: i
-        real(dp) :: t, jac
-        complex(dp) :: s, Gn
+        real(dp),       intent(in)  :: alpha
+        integer(I128),  intent(in)  :: n
+        real(dp),       intent(out) :: norm
+        integer,        intent(out) :: ier
 
-        res = 0.0_dp
+        real(dp),       parameter   :: bound = 0.0_dp, epsabs = 1.0e-10_dp, epsrel = 1.0e-10_dp
+        integer,        parameter   :: inf   = 1, limit = 200
+        integer,        parameter   :: lenw  = 4*limit
 
-        do i = 1, nodes
-            t   = x(i) / (1.0_dp - x(i))          ! (0,1)->(0,inf)
-            jac = 1.0_dp / (1.0_dp - x(i))**2     ! dt/dx
+        real(dp)                    :: abserr, work(lenw)
+        integer                     :: neval, last, iwork(limit)
 
-            s = cmplx(alpha, t, kind=dp)
+        call dqagi(f, bound, inf, epsabs, epsrel, norm, abserr, neval, ier, &
+             limit, lenw, last, iwork, work)
 
-            call G(alpha,t,n,x,w,nodes,Gn)                      
-            res = res + real(Gn*conjg(Gn), dp) * jac * w(i)
-        end do
+        contains
 
-        res = res / pi
+        real(dp) function f(t)
+            real(dp), intent(in) :: t
+            complex(dp) :: Gn
+            call G(alpha, t, n, Gn)   ! tu G: devuelve Gn complejo
+            f = real(Gn*conjg(Gn), dp) / pi
+        end function f
+
+        ! integer :: i
+        ! real(dp) :: t, jac
+        ! complex(dp) :: s, Gn
+
+        ! res = 0.0_dp
+
+        ! do i = 1, nodes
+        !     t   = x(i) / (1.0_dp - x(i))          ! (0,1)->(0,inf)
+        !     jac = 1.0_dp / (1.0_dp - x(i))**2     ! dt/dx
+
+        !     s = cmplx(alpha, t, kind=dp)
+
+        !     call G(alpha,t,n,x,w,nodes,Gn)                      
+        !     res = res + real(Gn*conjg(Gn), dp) * jac * w(i)
+        !     ! En norm_hardy, dentro del loop:
+
+        !     ! print*, "i=", i, "t=", t
+        !     ! call G(alpha, t, n, x, w, nodes, Gn)
+        !     ! print*, "Gn=", Gn
+        ! end do
+
+        ! res = res / pi
 
     end subroutine norm_hardy
 
-    subroutine G(alpha,t,n,x,w,nodes,res)
+    subroutine G(alpha,t,n,res)
         use stdlib_kinds, only: dp
         implicit none
 
         integer, parameter :: I128 = selected_int_kind(38)
         real(dp),       intent(in) :: alpha,t
         integer(I128),  intent(in) :: n
-        complex(dp),    intent(out) :: res
-        real(dp),       intent(in) :: x(:),w(:)
-        integer,        intent(in) :: nodes
+        complex(dp),    intent(out):: res
 
         integer(I128) :: k
         integer :: muk
@@ -76,7 +101,7 @@ program riemann
 
         do k = 2, n
             call mobius(k,muk)
-            call H(alpha,t,k,x,w,nodes,Hk)
+            call H(alpha,t,k,Hk)
             res = res + (real(muk,dp) / real(k,dp) ) * Hk
         enddo
 
@@ -84,61 +109,56 @@ program riemann
 
     end subroutine G
 
-    subroutine H(alpha,t,k,x,w,nodes,Hk)
+    subroutine H(alpha,t,k,Hk)
         use stdlib_kinds, only: dp
         implicit none
 
         integer, parameter :: I128 = selected_int_kind(38)
         integer(I128),  intent(in)  :: k
-        integer,        intent(in) :: nodes
         real(dp),       intent(in) :: alpha,t
         complex(dp),    intent(out) :: Hk
-        real(dp),       intent(in) :: x(:), w(:)
 
         complex(dp) :: s,zeta,a
 
         s = cmplx(alpha,t,kind=dp)
         a = 1.0_dp - exp((1.0_dp - s) * log(real(k, dp)))
 
-        call zeta_function(s,x,w,nodes,zeta)
+        call zeta_function(s,zeta)
 
         hk = a * zeta / s
         
     end subroutine H
 
-    subroutine zeta_function(s,x,w,nodes,zeta)
-        use stdlib_kinds, only: dp
-        use stdlib_specialfunctions_gamma, only: gamma
+    subroutine zeta_function(s,zeta)
+        use stdlib_kinds,                   only: dp
+        use stdlib_specialfunctions_gamma,  only: gamma
+
         implicit none
 
-        integer,        intent(in) :: nodes
-        complex(dp),    intent(in) :: s
-        real(dp),       intent(in) :: x(:), w(:)
+        complex(dp),    intent(in)  :: s
         complex(dp),    intent(out) :: zeta
 
         complex(dp) :: a,xi
 
         a = 0.5_dp * s
-
         
-        call xi_quad(s,x,w,nodes,xi)
+        call xi_quad(s,xi)
 
         zeta = exp( a * log(pi)) * xi / gamma(a)
 
     end subroutine zeta_function
 
-    subroutine xi_quad(s,x,w,nodes,xi)
+    subroutine xi_quad(s,xi)
         use stdlib_kinds, only: dp
+
         implicit none
 
-        integer,        intent(in) :: nodes
         complex(dp),    intent(in)  :: s
-        real(dp),       intent(in)  :: x(:),w(:)
         complex(dp),    intent(out) :: xi
 
         complex(dp) :: a,b,quad,term1,term2
-        real(dp) :: u,jac,psi_u,logu
-        integer :: i
+        real(dp)    :: u,jac,psi_u,logu
+        integer     :: i
 
         a = -0.5_dp * (s + 1.0_dp)
         b =  0.5_dp * s - 1.0_dp
@@ -180,7 +200,7 @@ program riemann
         do while (term .gt. tol .and. n .le. n_max)
             res = res + term
             n = n + 1
-            term = exp(-pi * n**2 * u)
+            term = exp(-pi * n*n * u)
         enddo
 
     end subroutine psi
@@ -265,9 +285,5 @@ program riemann
             mu = -1
         end if
     end subroutine mobius
-
-    
-
-    ! subroutine hardy_norm_Gn()
     
 end program riemann
