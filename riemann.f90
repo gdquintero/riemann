@@ -6,204 +6,209 @@ program riemann
 
     integer, parameter :: I128 = selected_int_kind(38)
     real(dp), parameter :: pi = 3.1415926535897932
-    integer :: nodes
+    integer :: ier
     integer(I128) :: n
-    real(dp), allocatable :: x(:), w(:),interval(:)
-    real(dp) :: alpha, norm
+    real(dp) :: alpha, norm, t, result, abserr
+    complex(dp) :: zeta,s
+    complex(dp) :: s_saved,xi
+    real :: t0, t1
+    real(dp) :: alpha_saved
+    integer(selected_int_kind(38)) :: n_saved
 
-    nodes = 10
-    allocate(x(nodes), w(nodes),interval(2))
-
-    interval = [0.0_dp,1.0_dp]
-    call gauss_legendre(x,w,interval)
 
     n = 2
-    alpha = 0.8_dp
+    alpha = 0.9_dp
+    t = 2738947983427.0_dp
+    s = cmplx(alpha,t,kind=dp)
 
-    call norm_hardy(alpha,n,x,w,nodes,norm)
+    call zeta_floor(s,200000,zeta,ier)
 
-    ! print*, norm
-    
+    print*, zeta
 
     contains
 
-    subroutine norm_hardy(alpha,n,norm,ier)
+    ! subroutine norm_hardy(alpha, n, norm, ier_hardy)
+    !     use stdlib_kinds, only: dp
+    !     use quadpack,     only: dqagi
+    !     use quadpack,     only: dqag
+    !     implicit none
+
+    !     integer, parameter :: I128 = selected_int_kind(38)
+
+    !     real(dp),      intent(in)  :: alpha
+    !     integer(I128), intent(in)  :: n
+    !     real(dp),      intent(out) :: norm
+    !     integer,       intent(out) :: ier_hardy
+
+    !     real(dp), parameter :: bound  = 0.0_dp
+    !     integer,  parameter :: inf    = 1
+    !     real(dp), parameter :: epsabs = 1.0e-10_dp
+    !     real(dp), parameter :: epsrel = 1.0e-10_dp
+
+    !     integer,  parameter :: limit  = 200
+    !     integer,  parameter :: lenw   = 4*limit
+
+    !     real(dp) :: abserr, work(lenw)
+    !     integer  :: neval, last, iwork(limit)
+
+    !     real(dp), parameter :: a = 0.0_dp, b = 100.0_dp
+    !     integer,  parameter :: key = 6
+
+    !     ! Guardar parámetros para el integrando
+    !     alpha_saved = alpha
+    !     n_saved     = n
+
+    !     call dqag(hardy_f, a, b, epsabs, epsrel, key, norm, abserr, neval, ier_hardy, &
+    !       limit, lenw, last, iwork, work)
+
+    !     ! call dqagi(hardy_f, bound, inf, epsabs, epsrel, norm, abserr, neval, ier_hardy, &
+    !     !             limit, lenw, last, iwork, work)
+    ! end subroutine norm_hardy
+
+
+    ! real(dp) function hardy_f(t)
+    !     use stdlib_kinds, only: dp
+    !     implicit none
+    !     real(dp), intent(in) :: t
+    !     complex(dp) :: Gn
+
+    !     call G(alpha_saved, t, n_saved, Gn)     ! tu G devuelve complejo
+    !     hardy_f = real(Gn*conjg(Gn), dp) / pi   ! pi debe estar en el host del programa
+    ! end function hardy_f
+
+!     real(dp) function hardy_f(t)
+!   use stdlib_kinds, only: dp
+!   use, intrinsic :: ieee_arithmetic, only: ieee_is_finite
+!   implicit none
+!   real(dp), intent(in) :: t
+!   complex(dp) :: Gn
+!   real(dp) :: val
+
+!   call G(alpha_saved, t, n_saved, Gn)
+!   val = real(Gn*conjg(Gn), dp)
+
+!   if (.not. ieee_is_finite(val)) then
+!      print *, "NaN/Inf en hardy_f: t=", t, " Gn=", Gn
+!      hardy_f = 0.0_dp
+!      return
+!   end if
+
+!   hardy_f = val / pi
+! end function hardy_f
+
+    ! subroutine G(alpha, t, n, Gn)
+    !     use stdlib_kinds, only: dp
+    !     implicit none
+    !     integer, parameter :: I128 = selected_int_kind(38)
+
+    !     real(dp),      intent(in)  :: alpha, t
+    !     integer(I128), intent(in)  :: n
+    !     complex(dp),   intent(out) :: Gn
+
+    !     complex(dp) :: s, zeta, Hk
+    !     integer(I128) :: k
+    !     integer :: mu
+
+    !     s = cmplx(alpha, t, kind=dp)
+
+    !     ! zeta(s) SOLO depende de s: calcular una vez
+    !     call zeta_function(s, zeta)
+
+    !     Gn = (0.0_dp, 0.0_dp)
+
+    !     do k = 2, n
+    !         call mobius(k, mu)
+    !         if (mu == 0) cycle
+
+    !         call Hk_eval(s, k, zeta, Hk)
+    !         Gn = Gn + (real(mu, dp) / real(k, dp)) * Hk
+    !     end do
+
+    !     Gn = Gn + 1.0_dp / s
+    ! end subroutine G
+
+    ! subroutine Hk_eval(s, k, zeta, Hk)
+    !     use stdlib_kinds, only: dp
+    !     implicit none
+    !     integer, parameter :: I128 = selected_int_kind(38)
+
+    !     complex(dp),   intent(in)  :: s
+    !     integer(I128), intent(in)  :: k
+    !     complex(dp),   intent(in)  :: zeta
+    !     complex(dp),   intent(out) :: Hk
+
+    !     real(dp)    :: logk
+    !     complex(dp) :: kpow, factor
+
+    !     ! k^(1-s) = exp((1-s)*log(k))
+    !     logk = log(real(k, dp))
+    !     kpow = exp( (1.0_dp - s) * logk )
+
+    !     factor = (1.0_dp - kpow)
+
+    !     Hk = factor * (zeta / s)
+    ! end subroutine Hk_eval
+    
+
+
+    subroutine zeta_floor(s, n, zeta, ier)
         use stdlib_kinds, only: dp
-        use quadpack,     only: dqagi
-
         implicit none
 
-        integer, parameter :: I128 = selected_int_kind(38)
+        complex(dp), intent(in)  :: s
+        integer,     intent(in)  :: n
+        complex(dp), intent(out) :: zeta
+        integer,     intent(out) :: ier
 
-        real(dp),       intent(in)  :: alpha
-        integer(I128),  intent(in)  :: n
-        real(dp),       intent(out) :: norm
-        integer,        intent(out) :: ier
+        integer :: k
+        real(dp) :: logk, logkp1
+        complex(dp) :: ks, kp1s, k1ms, kp11ms
+        complex(dp) :: term, one_minus_s
 
-        real(dp),       parameter   :: bound = 0.0_dp, epsabs = 1.0e-10_dp, epsrel = 1.0e-10_dp
-        integer,        parameter   :: inf   = 1, limit = 200
-        integer,        parameter   :: lenw  = 4*limit
+        ! --- chequeos básicos ---
+        if (n < 1) then
+            zeta = cmplx(0.0_dp, 0.0_dp, kind=dp)
+            ier = 2   ! n inválido
+            return
+        end if
 
-        real(dp)                    :: abserr, work(lenw)
-        integer                     :: neval, last, iwork(limit)
+        if (abs(s - cmplx(1.0_dp, 0.0_dp, kind=dp)) < 1.0e-14_dp) then
+            zeta = cmplx(0.0_dp, 0.0_dp, kind=dp)
+            ier = 1   ! polo en s=1
+            return
+        end if
 
-        call dqagi(f, bound, inf, epsabs, epsrel, norm, abserr, neval, ier, &
-             limit, lenw, last, iwork, work)
+        if (abs(s) < 1.0e-14_dp .or. abs(1.0_dp - s) < 1.0e-14_dp) then
+            zeta = cmplx(0.0_dp, 0.0_dp, kind=dp)
+            ier = 3   ! evita división por s o (1-s)
+            return
+        end if
 
-        contains
+        ier = 0
+        one_minus_s = 1.0_dp - s
 
-        real(dp) function f(t)
-            real(dp), intent(in) :: t
-            complex(dp) :: Gn
-            call G(alpha, t, n, Gn)   ! tu G: devuelve Gn complejo
-            f = real(Gn*conjg(Gn), dp) / pi
-        end function f
+        ! Parte racional: s/(s-1)
+        zeta = s/(s - 1.0_dp)
 
-        ! integer :: i
-        ! real(dp) :: t, jac
-        ! complex(dp) :: s, Gn
+        ! Suma truncada en k=1..n
+        do k = 1, n
+            logk   = log(real(k,   dp))
+            logkp1 = log(real(k+1, dp))
 
-        ! res = 0.0_dp
+            ! k^{-s}, (k+1)^{-s}
+            ks   = exp((-s) * logk)
+            kp1s = exp((-s) * logkp1)
 
-        ! do i = 1, nodes
-        !     t   = x(i) / (1.0_dp - x(i))          ! (0,1)->(0,inf)
-        !     jac = 1.0_dp / (1.0_dp - x(i))**2     ! dt/dx
+            ! k^{1-s}, (k+1)^{1-s}
+            k1ms   = exp((1.0_dp - s) * logk)
+            kp11ms = exp((1.0_dp - s) * logkp1)
 
-        !     s = cmplx(alpha, t, kind=dp)
-
-        !     call G(alpha,t,n,x,w,nodes,Gn)                      
-        !     res = res + real(Gn*conjg(Gn), dp) * jac * w(i)
-        !     ! En norm_hardy, dentro del loop:
-
-        !     ! print*, "i=", i, "t=", t
-        !     ! call G(alpha, t, n, x, w, nodes, Gn)
-        !     ! print*, "Gn=", Gn
-        ! end do
-
-        ! res = res / pi
-
-    end subroutine norm_hardy
-
-    subroutine G(alpha,t,n,res)
-        use stdlib_kinds, only: dp
-        implicit none
-
-        integer, parameter :: I128 = selected_int_kind(38)
-        real(dp),       intent(in) :: alpha,t
-        integer(I128),  intent(in) :: n
-        complex(dp),    intent(out):: res
-
-        integer(I128) :: k
-        integer :: muk
-        complex(dp) :: Hk
-
-        res = (0.0_dp,0.0_dp)
-
-        do k = 2, n
-            call mobius(k,muk)
-            call H(alpha,t,k,Hk)
-            res = res + (real(muk,dp) / real(k,dp) ) * Hk
-        enddo
-
-        res = res + 1.0_dp / cmplx(alpha,t,kind=dp)
-
-    end subroutine G
-
-    subroutine H(alpha,t,k,Hk)
-        use stdlib_kinds, only: dp
-        implicit none
-
-        integer, parameter :: I128 = selected_int_kind(38)
-        integer(I128),  intent(in)  :: k
-        real(dp),       intent(in) :: alpha,t
-        complex(dp),    intent(out) :: Hk
-
-        complex(dp) :: s,zeta,a
-
-        s = cmplx(alpha,t,kind=dp)
-        a = 1.0_dp - exp((1.0_dp - s) * log(real(k, dp)))
-
-        call zeta_function(s,zeta)
-
-        hk = a * zeta / s
-        
-    end subroutine H
-
-    subroutine zeta_function(s,zeta)
-        use stdlib_kinds,                   only: dp
-        use stdlib_specialfunctions_gamma,  only: gamma
-
-        implicit none
-
-        complex(dp),    intent(in)  :: s
-        complex(dp),    intent(out) :: zeta
-
-        complex(dp) :: a,xi
-
-        a = 0.5_dp * s
-        
-        call xi_quad(s,xi)
-
-        zeta = exp( a * log(pi)) * xi / gamma(a)
-
-    end subroutine zeta_function
-
-    subroutine xi_quad(s,xi)
-        use stdlib_kinds, only: dp
-
-        implicit none
-
-        complex(dp),    intent(in)  :: s
-        complex(dp),    intent(out) :: xi
-
-        complex(dp) :: a,b,quad,term1,term2
-        real(dp)    :: u,jac,psi_u,logu
-        integer     :: i
-
-        a = -0.5_dp * (s + 1.0_dp)
-        b =  0.5_dp * s - 1.0_dp
-
-        quad = (0.0_dp, 0.0_dp)
-
-        do i = 1, nodes
-            u = 1.0_dp/(1.0_dp - x(i))
-            jac = 1.0_dp/(1.0_dp - x(i))**2  
-            logu = log(u)
-
-            term1 = exp(a * logu)    ! u^(-s/2-1/2)
-            term2 = exp(b * logu)    ! u^( s/2-1)
-
-            call psi(u,psi_u)
-
-            quad = quad + (term1 + term2) * psi_u * jac * w(i)
+            term = real(k,dp) * (ks - kp1s) / s  -  (kp11ms - k1ms) / one_minus_s
+            zeta = zeta + s * term
         end do
 
-        xi = 1.0_dp/(s - 1.0_dp) - 1.0_dp/s + quad
-    end subroutine xi_quad
+    end subroutine zeta_floor
 
-    subroutine psi(u,res)
-        use stdlib_kinds, only: dp
-        implicit none
-
-        real(dp),   intent(in) :: u
-        real(dp),   intent(out) :: res
-        
-        real(dp), parameter :: tol = 1.d-8
-        real(dp) :: term
-        integer :: n, n_max
-
-        res = 0.d0
-        n = 1
-        n_max = 10000
-        term = exp(-pi * n**2 * u)
-
-        do while (term .gt. tol .and. n .le. n_max)
-            res = res + term
-            n = n + 1
-            term = exp(-pi * n*n * u)
-        enddo
-
-    end subroutine psi
 
     subroutine mobius(n, mu)
         implicit none
