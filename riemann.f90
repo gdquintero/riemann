@@ -1,25 +1,10 @@
 program riemann
-    use stdlib_kinds,                   only: sp, dp, int64
-    use stdlib_quadrature,              only: gauss_legendre
+    use stdlib_kinds,       only: sp, dp, int64
 
     implicit none
 
     integer, parameter :: I128 = selected_int_kind(38)
     real(dp), parameter :: pi = 3.1415926535897932
-    integer :: n_used
-    integer(I128) :: n
-    real(dp) :: alpha, norm, t, result, abserr
-    complex(dp) :: zeta1,zeta2,s
-    complex(dp) :: s_saved,xi
-    real :: t0, t1
-    real(dp) :: alpha_saved
-    integer(selected_int_kind(38)) :: n_saved
-
-
-    n = 2
-    alpha = 0.9_dp
-    t = 2738947983427.0_dp
-    s = cmplx(1.0_dp,1.0_dp,kind=dp)
 
     contains
 
@@ -218,7 +203,7 @@ program riemann
         integer, parameter :: I128 = selected_int_kind(38)
         integer(I128), intent(in)  :: n
         integer,       intent(out) :: mu
-        
+
         integer(I128) :: m, p
         integer :: k
 
