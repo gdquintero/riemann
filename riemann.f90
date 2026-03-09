@@ -5,6 +5,8 @@ program riemann
 
     integer, parameter :: I128 = selected_int_kind(38)
     real(dp), parameter :: pi = 3.1415926535897932
+    real(dp) :: alpha_saved
+    integer(selected_int_kind(38)) :: n_saved
 
     contains
 
@@ -169,7 +171,7 @@ program riemann
 
         integer :: n,n_max,n_used
         real(dp) :: tol,logk,logkp1
-        complex(dp) :: ks,kp1s,k1ms,kp11ms,term,zeta1
+        complex(dp) :: ks,kp1s,k1ms,kp11ms,term,zeta1,zeta2
 
         n = 1
         n_max = 1000000
