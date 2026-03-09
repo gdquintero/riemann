@@ -11,6 +11,6 @@ t = 2738947983427.0
 n = 2
 
 
-print(sc.special.zeta(0.9+2738947983427j))
+print(sc.special.zeta(1+1j))
 
 
