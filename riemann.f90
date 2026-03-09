@@ -21,14 +21,13 @@ program riemann
     t = 2738947983427.0_dp
     s = cmplx(1.0_dp,1.0_dp,kind=dp)
 
-
-
     contains
 
-    subroutine norm_hardy(alpha, n, norm, ier_hardy)
+    subroutine norm_hardy(alpha,n,norm,ier_hardy)
         use stdlib_kinds, only: dp
         use quadpack,     only: dqagi
         use quadpack,     only: dqag
+
         implicit none
 
         integer, parameter :: I128 = selected_int_kind(38)
@@ -58,13 +57,15 @@ program riemann
 
         call dqagi(hardy_f, bound, inf, epsabs, epsrel, norm, abserr, neval, ier_hardy, &
                     limit, lenw, last, iwork, work)
-                    
+
     end subroutine norm_hardy
 
 
     real(dp) function hardy_f(t)
         use stdlib_kinds, only: dp
+
         implicit none
+
         real(dp), intent(in) :: t
         complex(dp) :: Gn
 
@@ -74,9 +75,10 @@ program riemann
 
     subroutine G(alpha, t, n, Gn)
         use stdlib_kinds, only: dp
-        implicit none
-        integer, parameter :: I128 = selected_int_kind(38)
 
+        implicit none
+
+        integer, parameter :: I128 = selected_int_kind(38)
         real(dp),      intent(in)  :: alpha, t
         integer(I128), intent(in)  :: n
         complex(dp),   intent(out) :: Gn
@@ -105,9 +107,10 @@ program riemann
 
     subroutine Hk_eval(s, k, zeta, Hk)
         use stdlib_kinds, only: dp
-        implicit none
-        integer, parameter :: I128 = selected_int_kind(38)
 
+        implicit none
+
+        integer, parameter :: I128 = selected_int_kind(38)
         complex(dp),   intent(in)  :: s
         integer(I128), intent(in)  :: k
         complex(dp),   intent(in)  :: zeta
@@ -127,6 +130,7 @@ program riemann
 
     subroutine zeta_floor(s,n,zeta)
         use stdlib_kinds, only: dp
+
         implicit none
 
         complex(dp), intent(in)  :: s
@@ -174,6 +178,7 @@ program riemann
         use stdlib_kinds, only: dp
 
         implicit none
+
         complex(dp),    intent(in)  :: s
         complex(dp),    intent(out) :: zeta
 
@@ -204,18 +209,16 @@ program riemann
 
             n = 2 * n
             zeta1 = zeta2
-
         enddo
-
-
     end subroutine zeta_function
-
 
     subroutine mobius(n, mu)
         implicit none
+
         integer, parameter :: I128 = selected_int_kind(38)
         integer(I128), intent(in)  :: n
         integer,       intent(out) :: mu
+        
         integer(I128) :: m, p
         integer :: k
 
