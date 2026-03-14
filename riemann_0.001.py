@@ -26,11 +26,10 @@ results = []
 
 param = np.loadtxt("parameters.txt")
 
-max_iter = int(param[0])
-max_time = int(param[1])
-points   = int(param[2])
+max_time = int(param[0])
+points   = int(param[1])
 
-tol = 5e-4
+tol = 1e-3
 
 # Generamos particion del intervalo cerrado [0.5,1]
 partition = np.linspace(0.5,0.995,points)
@@ -49,15 +48,11 @@ for alpha in partition:
             lambda t: np.absolute(Gn(alpha, t, n)) ** 2,
             0.,
             np.inf,
-            epsrel=1e-8,
-            epsabs=1e-8,
         )  
 
         res /= np.pi 
 
         if time.time() - start > max_time:
-            break
-        elif n > max_iter:
             break
         elif res <= tol:
             break
@@ -69,7 +64,7 @@ for alpha in partition:
     results.append(f"{alpha} {res} {n} {total_time}\n")
 
     # Escribir todo al archivo en un solo paso
-    with open("output_tol_0.0005.txt", "w") as f:
+    with open("output_tol_0.005.txt", "w") as f:
         f.writelines(results)
 
     start, finish = 0, 0

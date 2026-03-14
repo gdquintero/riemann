@@ -29,10 +29,10 @@ param = np.loadtxt("parameters.txt")
 max_time = int(param[0])
 points   = int(param[1])
 
-tol = 5e-2
+tol = 1e-2
 
 # Generamos particion del intervalo cerrado [0.5,1]
-partition = np.linspace(0.65,0.695,points)
+partition = np.linspace(0.5,0.995,points)
 
 
 for alpha in partition:
@@ -49,17 +49,17 @@ for alpha in partition:
             lambda t: np.absolute(Gn(alpha, t, n)) ** 2,
             0.,
             np.inf,
-            epsrel=1e-4,
-            epsabs=1e-4,
         )  
 
-        res *= 2.
+        res /= np.pi 
 
         if time.time() - start > max_time:
             break
         elif res <= tol:
             break
-        
+
+
+    # print(res / (2. * np.pi))
 
     finish = time.time() # Marca el tiempo de finalizacion
     total_time = finish - start
