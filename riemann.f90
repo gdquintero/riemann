@@ -8,6 +8,14 @@ program riemann
     real(dp) :: alpha_saved
     integer(selected_int_kind(38)) :: n_saved
 
+    complex(dp) :: s,zeta
+
+    s = cmplx(0.5_dp,100000000.0_dp,kind=dp)
+
+    call zeta_floor(s, zeta)
+
+    print*, zeta
+
     contains
 
     subroutine norm_hardy(alpha,n,norm,ier_hardy)
@@ -77,7 +85,7 @@ program riemann
         s = cmplx(alpha, t, kind=dp)
 
         ! zeta(s) SOLO depende de s: calcular una vez
-        call zeta_function(s, zeta)
+        call zeta_floor(s, zeta)
 
         Gn = (0.0_dp, 0.0_dp)
 
@@ -115,29 +123,41 @@ program riemann
         Hk = factor * (zeta / s)
     end subroutine Hk_eval
 
-    subroutine zeta_floor(s,n,zeta)
+    subroutine zeta_floor(s, zeta)
         use stdlib_kinds, only: dp
-
         implicit none
 
         complex(dp), intent(in)  :: s
-        integer,     intent(in)  :: n
         complex(dp), intent(out) :: zeta
 
-        integer :: k
+        integer :: k, n, ier
         real(dp) :: logk, logkp1
         complex(dp) :: ks, kp1s, k1ms, kp11ms
         complex(dp) :: term, one_minus_s
 
+        n = 10000000
+
+        ! --- chequeos básicos ---
+        if (n < 1) then
+            zeta = cmplx(0.0_dp, 0.0_dp, kind=dp)
+            ier = 2   ! n inválido
+            return
+        end if
+
         if (abs(s - cmplx(1.0_dp, 0.0_dp, kind=dp)) < 1.0e-14_dp) then
             zeta = cmplx(0.0_dp, 0.0_dp, kind=dp)
+            ier = 1   ! polo en s=1
             return
         end if
 
         if (abs(s) < 1.0e-14_dp .or. abs(1.0_dp - s) < 1.0e-14_dp) then
             zeta = cmplx(0.0_dp, 0.0_dp, kind=dp)
+            ier = 3   ! evita división por s o (1-s)
             return
         end if
+
+        ier = 0
+        one_minus_s = 1.0_dp - s
 
         ! Parte racional: s/(s-1)
         zeta = s/(s - 1.0_dp)
@@ -155,49 +175,11 @@ program riemann
             k1ms   = exp((1.0_dp - s) * logk)
             kp11ms = exp((1.0_dp - s) * logkp1)
 
-            term = real(k,dp) * (ks - kp1s) / s  -  (kp11ms - k1ms) / (1.0_dp - s)
+            term = real(k,dp) * (ks - kp1s) / s  -  (kp11ms - k1ms) / one_minus_s
             zeta = zeta + s * term
         end do
 
     end subroutine zeta_floor
-
-    subroutine zeta_function(s,zeta)
-        use stdlib_kinds, only: dp
-
-        implicit none
-
-        complex(dp),    intent(in)  :: s
-        complex(dp),    intent(out) :: zeta
-
-        integer :: n,n_max,n_used
-        real(dp) :: tol,logk,logkp1
-        complex(dp) :: ks,kp1s,k1ms,kp11ms,term,zeta1,zeta2
-
-        n = 1
-        n_max = 1000000
-        tol = 1.0e-10_dp
-
-        call zeta_floor(s,n,zeta1)
-
-        do
-            if (2 * n > n_max) then
-                zeta = zeta1
-                n_used = n
-                return
-            endif
-
-            call zeta_floor(s,2*n,zeta2)
-
-            if (abs(zeta2 - zeta1) < tol) then
-                zeta = zeta2
-                n_used = n
-                return
-            endif
-
-            n = 2 * n
-            zeta1 = zeta2
-        enddo
-    end subroutine zeta_function
 
     subroutine mobius(n, mu)
         implicit none
