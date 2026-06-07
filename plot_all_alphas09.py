@@ -32,7 +32,7 @@ plt.grid(True, linestyle="--", lw=0.5, alpha=0.6)
 plt.xlabel(r"$n$", fontsize=16)
 plt.ylabel(r"$s_n$", fontsize=16)
 plt.xlim(-500, 100500)
-plt.ylim(-0.00005, 0.0023)
+# plt.ylim(-0.00005, 0.0023)
 
 # Agregar leyenda mejorada
 plt.legend(loc="upper right", fontsize=10, frameon=True, edgecolor="black",fancybox=False)

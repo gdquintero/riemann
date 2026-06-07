@@ -37,4 +37,4 @@ plt.xlim(-500, 100500)
 # Agregar leyenda mejorada
 plt.legend(loc="upper left", fontsize=10, frameon=True, edgecolor="black",fancybox=False)
 plt.savefig("alpha05.pdf", bbox_inches="tight")
-plt.show()
+# plt.show()

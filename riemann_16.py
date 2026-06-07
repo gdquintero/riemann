@@ -32,11 +32,11 @@ for n in range(76000, 81000, 1000):
     # Realizar la integración con scipy
     res, err = sc.integrate.quad(
         lambda t: np.absolute(Gn(alpha, t, n)) ** 2,
-        -np.inf,
+        0,
         np.inf,
-        epsrel=1e-8,
-        epsabs=1e-8,
     )
+
+    res /= np.pi 
 
     finish = time.time() # Marca el tiempo de finalizacion
     total_time = finish - start
