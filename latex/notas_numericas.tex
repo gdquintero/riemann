@@ -1,0 +1,324 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Reop}{\operatorname{Re}}
+\newcommand{\Imop}{\operatorname{Im}}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\title{Notas internas sobre la parte num\'erica\\
+\large (documento de trabajo; \emph{no} forma parte del paper)}
+\author{Registro detallado de lo que se hizo, por qu\'e, y con qu\'e resultados}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent
+Este documento explica, sin omitir detalles, todo el trabajo num\'erico realizado para
+la subsecci\'on ``The optimal error and the $c/\log n$ law'' (Sec.~4.3 del paper) y para
+el Teorema~3.2. Est\'a pensado para que nosotros entendamos exactamente qu\'e se
+comput\'o, qu\'e errores hubo, c\'omo se corrigieron, y cu\'ales son las limitaciones.
+
+\tableofcontents
+
+\section{Objetivo y notaci\'on}
+
+Trabajamos en el espacio de Hardy $H^2(\C_\alpha)$, $\C_\alpha=\{\Reop s>\alpha\}$, con
+producto interno de frontera
+\[
+\langle F,H\rangle_\alpha=\frac1{2\pi}\int_{-\infty}^{\infty}F(\alpha+it)\,\overline{H(\alpha+it)}\,dt,
+\qquad \norm{F}_\alpha^2=\langle F,F\rangle_\alpha .
+\]
+Los objetos del paper son, para $k\ge2$,
+\[
+G_k(s)=\bigl(k^{-s}-k^{-1}\bigr)\frac{\zeta(s)}{s},\qquad E(s)=\frac1s .
+\]
+Definimos dos cantidades:
+\begin{itemize}[leftmargin=*]
+  \item el \textbf{error de M\"obius} $s_n(\alpha)=\norm{S_n-E}_\alpha^2$, con
+        $S_n=\sum_{k=2}^n\mu(k)G_k$ (coeficientes \emph{fijos});
+  \item la \textbf{distancia \'optima}
+        $d_n(\alpha)^2=\inf_{c_2,\dots,c_n}\norm{\sum_{k=2}^n c_kG_k-E}_\alpha^2$
+        (coeficientes \emph{libres}).
+\end{itemize}
+Siempre $d_n(\alpha)^2\le s_n(\alpha)$. Todo el estudio fino es en la l\'inea cr\'itica
+$\alpha=1/2$. El valor de referencia conjeturado (Nyman--Beurling--B\'aez-Duarte,
+Balazard--Saias) es
+\[
+\sum_{\rho}\frac1{|\rho|^2}=2+\gamma-\log(4\pi)\approx0.0461 .
+\]
+
+\section{La cantidad correcta: por qu\'e coeficientes \emph{reales}}
+\label{sec:bug}
+
+Este fue el punto m\'as delicado y donde hubo un \textbf{error en el primer prototipo}
+que corregimos.
+
+\paragraph{La sutileza.} La norma de $H^2$ es $\frac1{2\pi}\int_{-\infty}^{\infty}$.
+Como $E$ y los $G_k$ tienen coeficientes de Dirichlet \emph{reales}, valen las
+reflexiones $E(\overline s)=\overline{E(s)}$, $G_k(\overline s)=\overline{G_k(s)}$.
+Por lo tanto, \textbf{solo si los coeficientes $c_k$ son reales}, la funci\'on
+$F=\sum c_kG_k-E$ hereda $F(\overline s)=\overline{F(s)}$, su m\'odulo al cuadrado es
+\emph{par} en $t$, y entonces
+\[
+\norm{F}_\alpha^2=\frac1{2\pi}\int_{-\infty}^{\infty}|F(\alpha+it)|^2\,dt
+=\frac1{\pi}\int_{0}^{\infty}|F(\alpha+it)|^2\,dt .
+\]
+
+\paragraph{El error.} El primer prototipo (\code{proto\_dn.py}) montaba una matriz de
+dise\~no $M$ con los $G_k$ muestreados solo en el semieje $t\ge0$ (con peso
+$\sqrt{w/\pi}$) y resolv\'ia $\min_c\norm{Mc-y}^2$ por \code{numpy.linalg.lstsq}
+\emph{dejando $c$ complejo}. Con $c$ complejo, $F$ pierde la simetr\'ia de reflexi\'on
+y $\frac1\pi\int_0^\infty|F|^2 \ne \frac1{2\pi}\int_{-\infty}^{\infty}|F|^2$: el
+\code{lstsq} explota la libertad compleja para ajustar mejor \emph{el semieje},
+dando un residuo \textbf{menor que la distancia real} de $H^2$. Es decir,
+\emph{subestimaba} $d_n^2$.
+
+\paragraph{La formulaci\'on correcta.} Hay que minimizar sobre $c\in\R^{\,n-1}$. Con
+$A=(\langle G_j,G_k\rangle_\alpha)$ y $b=(\langle E,G_k\rangle_\alpha)$, y usando que la
+parte imaginaria de $A$ es antisim\'etrica (no contribuye para $c$ real),
+\[
+\norm{\textstyle\sum c_kG_k-E}_\alpha^2
+=c^{\top}\tilde A\,c-2c^{\top}\tilde b+\norm{E}_\alpha^2,\qquad
+\tilde A=\Reop A,\ \ \tilde b=\Reop b,
+\]
+de donde
+\[
+\boxed{\ d_n(\alpha)^2=\norm{E}_\alpha^2-\tilde b^{\top}\tilde A^{-1}\tilde b\ }.
+\]
+Como $\tilde A$ es real, sim\'etrica y definida positiva, la soluci\'on $c=\tilde
+A^{-1}\tilde b$ es \emph{real} de todos modos: no perdemos nada por restringir a
+$c$ reales; simplemente hab\'ia que calcular con $\Reop A$ y $\Reop b$ (equivalente a
+$\frac1\pi\int_0^\infty\Reop[F\overline H]$).
+
+\paragraph{Verificaci\'on num\'erica del error.} Comparamos, en la misma malla fina,
+el \code{lstsq} complejo (mal) contra el problema con $c$ real (montando el dise\~no
+real $[\,\Reop M;\,\Imop M\,]$, que coincide exactamente con $\Reop A,\Reop b$):
+\[
+\begin{array}{r|ccc}
+n & \text{lstsq complejo (MAL)} & \text{$c$ real (correcto)} & \text{sub-estim.}\\
+\hline
+40  & 1.19119\times10^{-2} & 1.27319\times10^{-2} & -6.4\%\\
+80  & 1.02292\times10^{-2} & 1.09950\times10^{-2} & -7.0\%\\
+160 & 8.75673\times10^{-3} & 9.35455\times10^{-3} & -6.4\%\\
+320 & 7.54823\times10^{-3} & 7.95974\times10^{-3} & -5.2\%\\
+640 & 6.61234\times10^{-3} & 7.02153\times10^{-3} & -5.8\%\\
+\end{array}
+\]
+Los valores del paper son los de la columna correcta. \textbf{Consecuencia feliz:} tras
+la correcci\'on, $d_n^2\log n$ \emph{sube} y pasa a \textbf{oscilar sobre} $0.0461$ (antes
+quedaba sistem\'aticamente por debajo); el acuerdo con la conjetura mejora.
+
+\section{Los productos internos en forma cerrada parcial}
+\label{sec:formulas}
+
+Sobre la frontera, con $s=\alpha+it$, escribimos $G_k(\alpha+it)=a_k(t)\,\psi(t)$ donde
+\[
+a_k(t)=k^{-\alpha}e^{-it\log k}-k^{-1},\qquad \psi(t)=\frac{\zeta(\alpha+it)}{\alpha+it}.
+\]
+Sea el \emph{peso} $\rho(t)=|\psi(t)|^2=\dfrac{|\zeta(\alpha+it)|^2}{\alpha^2+t^2}$ (par,
+real, integrable). Definimos la transformada
+\[
+W(x)=\frac1{2\pi}\int_{-\infty}^{\infty}\rho(t)\,e^{itx}\,dt\quad(\text{real, par}).
+\]
+Un c\'alculo directo (desarrollando $a_j\overline{a_k}$ en cuatro t\'erminos) da la
+\textbf{matriz de Gram en forma cerrada}:
+\[
+A_{jk}=(jk)^{-\alpha}\,W(\log k-\log j)
+-\frac{j^{-\alpha}}{k}W(\log j)
+-\frac{k^{-\alpha}}{j}W(\log k)
++\frac{1}{jk}W(0).
+\]
+Para el vector $b$, con $g(t)=\dfrac{\overline{\psi(t)}}{\alpha+it}
+=\dfrac{\overline{\zeta(\alpha+it)}}{\alpha^2+t^2}$ (hermitiana: $g(-t)=\overline{g(t)}$,
+luego su transformada es \emph{real}) y
+$V(x)=\frac1{2\pi}\int_{-\infty}^{\infty}g(t)e^{itx}dt$,
+\[
+b_k=k^{-\alpha}V(\log k)-k^{-1}V(0).
+\]
+Adem\'as $\norm{E}_\alpha^2=\frac1{2\pi}\int\frac{dt}{\alpha^2+t^2}=\frac1{2\alpha}$
+(en $\alpha=1/2$ vale $1$; sirve de test de la cuadratura). \textbf{Todo $A$ y $b$ son
+reales}, coherente con la Secci\'on~\ref{sec:bug}.
+
+\section{M\'etodo 1: denso estable (el que produjo los n\'umeros del paper)}
+\label{sec:denso}
+
+Implementado en \code{dn\_run.py}. Es el m\'etodo \textbf{de referencia y el que se
+report\'o}.
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Malla.} $\approx2.8\times10^4$ nodos en $t\ge0$: parte fina uniforme
+        $t\in[0,80]$ con paso $0.01$, m\'as cola \emph{geom\'etrica} hasta
+        $t=3\times10^5$ ($2\times10^4$ nodos). Pesos trapezoidales.
+  \item \textbf{Ensamblado.} $M$ de columnas $G_k\sqrt{w/\pi}$, $y=E\sqrt{w/\pi}$;
+        luego $\tilde A=\Reop(M^HM)$, $\tilde b=\Reop(M^Hy)$,
+        $\norm{E}^2=\Reop(y^Hy)$.
+  \item \textbf{Resoluci\'on.} $d_n^2=\norm{E}^2-\tilde b_{[:n]}^{\top}
+        \tilde A_{[:n,:n]}^{-1}\tilde b_{[:n]}$ v\'ia \code{numpy.linalg.solve}
+        sobre la submatriz principal (barato reusar el $\tilde A$ grande).
+  \item \textbf{$s_n$.} Para $c=\mu(k)$: $s_n=\mu^{\top}\tilde A\mu-2\mu^{\top}\tilde b+\norm{E}^2$
+        (los $\mu(k)$ ya son reales, aqu\'i \emph{no} hab\'ia bug).
+\end{enumerate}
+
+\paragraph{Validaciones hechas.}
+\begin{itemize}[leftmargin=*]
+  \item $\norm{E}_{1/2}^2=0.999999$ contra el exacto $1$ (6 d\'igitos) $\Rightarrow$
+        la cuadratura integra bien.
+  \item Coincidencia exacta entre \code{solve}$(\Reop A,\Reop b)$ y el dise\~no real
+        $[\Reop M;\Imop M]$ v\'ia \code{lstsq} (misma respuesta, confirma la
+        formulaci\'on de la Secci\'on~\ref{sec:bug}).
+  \item Estabilidad de $d_n^2$ bajo refinamiento de malla (probado con mallas de
+        $7\times10^3$ hasta $4.2\times10^4$ nodos): las curvas coinciden a precisi\'on
+        de gr\'afico.
+\end{itemize}
+
+\section{M\'etodo 2: acelerado por FFT (explorado, \emph{no} usado en el paper)}
+\label{sec:fft}
+
+Implementado en \code{dn\_gram.py}. La idea era usar las f\'ormulas cerradas de la
+Secci\'on~\ref{sec:formulas} para llegar a $n\sim10^4$--$10^5$ sin montar la $M$ gigante:
+muestrear $\rho(t)$ y $g(t)$ en malla uniforme, obtener $W,V$ por FFT, e interpolar en
+$x=\log(k/j)$ y $x=\log k$.
+
+\paragraph{Un bug de signo (corregido).} La transformada usa $e^{+itx}$. Para $\rho$
+\emph{real}, \code{np.fft.fft} (que lleva $e^{-i\cdots}$) da lo mismo en la parte real,
+as\'i que $W$ sal\'ia bien. Pero para $g$ \emph{complejo}, el t\'ermino con $\Imop g$
+cambia de signo: hab\'ia que usar $M\cdot\code{ifft}$ (que lleva $e^{+i\cdots}$).
+Sin la correcci\'on, $V$ (y por tanto $b$) sal\'ia mal por un factor grande.
+Tras corregir, $A$ y $b$ coincid\'ian con el denso.
+
+\paragraph{Por qu\'e \emph{no} escala (raz\'on de fondo).} Dos muros:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Cancelaci\'on catastr\'ofica.} $d_n^2=\norm{E}^2-\text{proy}$ con
+        $\norm{E}^2\approx1$ y $\text{proy}\approx0.99$: restar dos n\'umeros casi
+        iguales. Para obtener $d_n^2\sim10^{-3}$ a 2--3 cifras hace falta la
+        proyecci\'on a $\sim6$ cifras.
+  \item \textbf{Cola del peso.} $\rho(t)\sim\log t/t^2$; truncar en $T$ deja un residuo
+        $\sim\log T/T$ en $W$ que, amplificado por la cancelaci\'on, contamina $d_n^2$.
+\end{enumerate}
+Medido (referencia = denso correcto):
+\[
+\begin{array}{ll|ccc}
+dt & T & n{=}160 & n{=}640 & n{=}1280\\
+\hline
+0.02 & 2\times10^4 & +3.7\% & +5.9\% & +7.0\%\\
+0.01 & 2\times10^4 & +3.7\% & +5.9\% & +7.0\%\\
+0.01 & 4\times10^4 & +1.5\% & +2.4\% & +2.9\%\\
+0.005& 4\times10^4 & +1.5\% & +2.4\% & +2.9\%\\
+\end{array}
+\]
+Lectura: el paso $dt$ \emph{no} importa (la malla en $t$ ya basta); el error lo fija
+\emph{$T$} (la cola). Duplicar $T$ redujo el error a la mitad. Para $<0.5\%$ har\'ia falta
+$T\sim10^6$, es decir $\sim5\times10^7$ nodos: demasiado caro para la ganancia. Por eso
+\textbf{descartamos el M\'etodo~2 para producir n\'umeros} y nos quedamos con el denso.
+
+\section{Condicionamiento y por qu\'e $n\le5120$}
+\label{sec:cond}
+
+La matriz $\tilde A=M^HM$ tiene $\operatorname{cond}(\tilde A)=\operatorname{cond}(M)^2$;
+los $G_k$ se vuelven casi linealmente dependientes al crecer $k$. N\'umeros medidos en
+la malla fina:
+\[
+\begin{array}{r|cc}
+n & \operatorname{cond}(M) & \operatorname{cond}(\tilde A)\\
+\hline
+80   & 1.84\times10^{2} & 3.40\times10^{4}\\
+160  & 4.12\times10^{2} & 1.70\times10^{5}\\
+320  & 8.88\times10^{2} & 7.88\times10^{5}\\
+640  & 1.93\times10^{3} & 3.73\times10^{6}\\
+1280 & 4.54\times10^{3} & 2.06\times10^{7}\\
+2560 & 1.25\times10^{4} & 1.57\times10^{8}\\
+\end{array}
+\]
+A $n=2560$, $\operatorname{cond}(\tilde A)\sim10^{8}$: el \code{solve} pierde $\sim8$
+d\'igitos de los $\sim16$ disponibles, sobran para $d_n^2$ a 3--4 cifras. A
+$n=5120$ (\'ultimo punto reportado) segu\'imos en zona estable; m\'as all\'a de eso
+la combinaci\'on cancelaci\'on $+$ condicionamiento har\'ia falta multiprecisi\'on.
+\emph{Adem\'as} la ganancia cient\'ifica de subir $n$ es marginal: la convergencia
+$1/\log n$ es glacial ($1/\log n$ pasa de $0.117$ en $n{=}5120$ a $0.087$ en $n{=}10^5$).
+
+\section{Resultados finales (corregidos)}
+\label{sec:result}
+
+Malla de $2.8\times10^4$ nodos, $\alpha=1/2$, hasta $n=5120$:
+\[
+\begin{array}{r|ccc}
+n & d_n(1/2)^2 & s_n(1/2) & d_n^2\log n\\
+\hline
+10   & 2.38407\times10^{-2} & 1.09220\times10^{-1} & 0.05490\\
+20   & 1.65317\times10^{-2} & 8.95797\times10^{-2} & 0.04952\\
+40   & 1.27319\times10^{-2} & 1.44170\times10^{-1} & 0.04697\\
+80   & 1.09950\times10^{-2} & 9.25434\times10^{-2} & 0.04818\\
+160  & 9.35455\times10^{-3} & 6.84596\times10^{-2} & 0.04748\\
+320  & 7.95974\times10^{-3} & 5.35622\times10^{-2} & 0.04591\\
+480  & 7.43951\times10^{-3} & 7.57841\times10^{-2} & 0.04593\\
+640  & 7.02153\times10^{-3} & 3.65723\times10^{-2} & 0.04537\\
+960  & 6.61986\times10^{-3} & 7.94786\times10^{-2} & 0.04546\\
+1280 & 6.36071\times10^{-3} & 3.47250\times10^{-2} & 0.04551\\
+1920 & 6.12159\times10^{-3} & 4.17903\times10^{-2} & 0.04628\\
+2560 & 5.93084\times10^{-3} & 4.31240\times10^{-2} & 0.04654\\
+3200 & 5.58352\times10^{-3} & 9.45740\times10^{-2} & 0.04506\\
+4096 & 5.38661\times10^{-3} & 1.22126\times10^{-1} & 0.04480\\
+5120 & 5.28239\times10^{-3} & 3.85040\times10^{-2} & 0.04512\\
+\end{array}
+\]
+Ajuste $d_n^2\sim C/\log n+D/(\log n)^2$ por regresi\'on en $1/\log n$:
+$C=0.0407$, $D=0.0306$. El $C$ l\'ider queda un $\sim12\%$ por debajo de $0.0461$ porque
+el rango de $n$ es corto (el t\'ermino $D/(\log n)^2$ absorbe parte); pero
+$d_n^2\log n$ \emph{crudo} ya oscila en $0.045$--$0.047$, cruzando $0.0461$. Esa es la
+historia honesta: acuerdo a pocos \% con la constante conjeturada, con la salvedad de
+que fijar $C$ con precisi\'on est\'a fuera de alcance por la lentitud $1/\log n$.
+
+\paragraph{Contraste $\mu(k)$ vs \'optimo.} $s_n$ se queda en $[3.5\times10^{-2},
+1.4\times10^{-1}]$ oscilando sin decaer (es lo que predice B\'aez-Duarte: los
+coeficientes fijos $\mu(k)$ \emph{divergen}); $d_n^2$ decae monot\'ono. El cociente
+$s_n/d_n^2$ va de $\sim5$ a $\sim20$. Ese contraste es la figura central (Fig.~4 del
+paper).
+
+\section{Qu\'e se a\~nadi\'o al paper y c\'omo reproducir}
+
+\paragraph{En \code{riemann.tex}.}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Subsecci\'on 3.3} ``A lower bound from the zeros of $\zeta$'':
+        Teorema~3.2 (cota inferior por n\'ucleo reproductor,
+        $\norm{E-\sum c_kG_k}_\alpha^2\ge 2(\Reop\rho-\alpha)/|\rho|^2$, y versi\'on
+        multi-cero $d_n^2\ge v^{*}K^{-1}v$) y Corolario~3.2
+        ($\tfrac12\le\Theta\le\alpha_c\le1$; $\alpha_c=\tfrac12\Rightarrow$ RH).
+  \item \textbf{Subsecci\'on 4.3} ``The optimal error and the $c/\log n$ law'':
+        m\'etodo, Figura~4 (contraste $+$ meseta) y Tabla~4 (valores corregidos).
+\end{itemize}
+
+\paragraph{Scripts (en la ra\'iz del repo).}
+\begin{itemize}[leftmargin=*]
+  \item \code{dn\_run.py} --- c\'omputo de referencia (M\'etodo~1). Genera
+        \code{dn\_results.npz} y \code{dn\_results.csv}.
+  \item \code{dn\_figure.py} --- produce \code{latex/fig\_dn.pdf} desde el
+        \code{.npz}.
+  \item \code{dn\_gram.py} --- M\'etodo~2 (FFT) con su validaci\'on; queda como
+        respaldo, \emph{no} se us\'o para los n\'umeros.
+  \item \code{proto\_dn.py} --- prototipo inicial (conten\'ia el bug de coef.
+        complejos; se conserva solo como historia).
+\end{itemize}
+Dependencias: Python~3, \code{numpy}, \code{scipy}$\ge$1.17 (soporte complejo de
+\code{scipy.special.zeta}), \code{matplotlib}. Reproducir: \code{python dn\_run.py \&\&
+python dn\_figure.py}.
+
+\paragraph{Puntos abiertos.}
+\begin{itemize}[leftmargin=*]
+  \item Barrido en $\alpha\in[1/2,1]$ para estimar $\alpha_c$ num\'ericamente
+        (cierra el Corolario~3.2).
+  \item Si se quisiera $n\gg5120$: multiprecisi\'on (\code{mpmath}) en el \code{solve},
+        o correcci\'on anal\'itica de la cola de $\rho$ en el M\'etodo~2.
+\end{itemize}
+
+\end{document}

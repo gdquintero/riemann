@@ -1,0 +1,19 @@
+\contentsline {section}{\numberline {1}Objetivo y notaci\'on}{1}{section.1}%
+\contentsline {section}{\numberline {2}La cantidad correcta: por qu\'e coeficientes \emph {reales}}{2}{section.2}%
+\contentsline {paragraph}{La sutileza.}{2}{section*.2}%
+\contentsline {paragraph}{El error.}{2}{section*.3}%
+\contentsline {paragraph}{La formulaci\'on correcta.}{2}{section*.4}%
+\contentsline {paragraph}{Verificaci\'on num\'erica del error.}{2}{section*.5}%
+\contentsline {section}{\numberline {3}Los productos internos en forma cerrada parcial}{3}{section.3}%
+\contentsline {section}{\numberline {4}M\'etodo 1: denso estable (el que produjo los n\'umeros del paper)}{3}{section.4}%
+\contentsline {paragraph}{Validaciones hechas.}{3}{section*.6}%
+\contentsline {section}{\numberline {5}M\'etodo 2: acelerado por FFT (explorado, \emph {no} usado en el paper)}{4}{section.5}%
+\contentsline {paragraph}{Un bug de signo (corregido).}{4}{section*.7}%
+\contentsline {paragraph}{Por qu\'e \emph {no} escala (raz\'on de fondo).}{4}{section*.8}%
+\contentsline {section}{\numberline {6}Condicionamiento y por qu\'e $n\le 5120$}{4}{section.6}%
+\contentsline {section}{\numberline {7}Resultados finales (corregidos)}{5}{section.7}%
+\contentsline {paragraph}{Contraste $\mu (k)$ vs \'optimo.}{5}{section*.9}%
+\contentsline {section}{\numberline {8}Qu\'e se a\~nadi\'o al paper y c\'omo reproducir}{5}{section.8}%
+\contentsline {paragraph}{En \texttt {riemann.tex}.}{5}{section*.10}%
+\contentsline {paragraph}{Scripts (en la ra\'iz del repo).}{5}{section*.11}%
+\contentsline {paragraph}{Puntos abiertos.}{6}{section*.12}%

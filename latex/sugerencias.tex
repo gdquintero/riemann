@@ -1,0 +1,256 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Reop}{\operatorname{Re}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{conjecture}{Conjecture}
+\theoremstyle{definition}
+\newtheorem{goal}{Objetivo}
+\theoremstyle{remark}
+\newtheorem*{idea}{Idea}
+
+\title{Sugerencias para fortalecer la parte num\'erica\\
+\large (documento de trabajo interno, no forma parte del paper)}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\noindent
+\textbf{Objeto del paper.} Para $\alpha\in\R$ y $k\ge2$,
+\[
+G_k(s)=\bigl(k^{-s}-k^{-1}\bigr)\frac{\zeta(s)}{s},\qquad E(s)=\frac1s,\qquad
+S_n=\sum_{k=2}^n\mu(k)G_k,\qquad s_n(\alpha)=\|S_n-E\|_\alpha^2,
+\]
+donde $\|\cdot\|_\alpha$ es la norma de $H^2(\C_\alpha)$, $\C_\alpha=\{\Reop s>\alpha\}$.
+
+\bigskip
+
+\section*{Reencuadre: un sensor computable de la abscisa de ceros $\Theta$}
+
+Sea
+\[
+\Theta:=\sup\{\Reop\rho:\ \zeta(\rho)=0\}, \qquad\text{de modo que}\qquad \Theta=\tfrac12 \iff \text{RH}.
+\]
+La Proposici\'on del paper dice: si $s_n(\alpha)\to0$ entonces $E$ est\'a en el span cerrado de
+$\{G_k\}$ en $H^2(\C_\alpha)$, y por tanto $\zeta$ no se anula en $\C_\alpha$, es decir
+$\Theta\le\alpha$. En consecuencia, \textbf{la abscisa de convergencia}
+\[
+\alpha_c:=\inf\{\alpha:\ s_n(\alpha)\to0\}
+\]
+\textbf{es una cota superior de $\Theta$}, y la transici\'on que observamos num\'ericamente
+\emph{estima} $\Theta$. El discurso pasa de ``regiones libres de ceros tan dif\'iciles como RH''
+(derrotista) a: \emph{introducimos un funcional en espacio de Hardy cuya transici\'on de
+convergencia se sit\'ua sobre la l\'inea cr\'itica; un sensor num\'erico de $\Theta$, y por tanto
+de RH.} La transici\'on \emph{en} $1/2$ no es un obst\'aculo: es el resultado. Si el m\'etodo
+detectase $\alpha_c>1/2$, ser\'ia indicio de un cero fuera de la l\'inea.
+
+\bigskip
+
+\section*{Sugerencia 1: coeficientes \'optimos frente a $\mu(k)$, y la ley $c/\log n$}
+
+\paragraph{El problema con lo actual.} Usamos los coeficientes \emph{fijos} $\mu(k)$. B\'aez-Duarte
+prob\'o que esta elecci\'on \emph{diverge} (su an\'alogo en $L^2(0,1)$ diverge, y ello se transfiere
+a $H^2(\C_{1/2})$). Por eso $s_n(1/2)$ oscila sin decaer: es esperable, y por s\'i solo no informa
+sobre RH.
+
+\paragraph{Lo que conviene medir.} La cantidad natural de Nyman--Beurling--B\'aez-Duarte es la
+\emph{distancia de mejor aproximaci\'on}
+\[
+d_n(\alpha)^2=\inf_{c_2,\dots,c_n\in\C}\Bigl\|\sum_{k=2}^n c_k G_k-E\Bigr\|_\alpha^2
+=\|E\|_\alpha^2-b^{*}A^{-1}b,
+\]
+donde
+\[
+A=\bigl(\langle G_j,G_k\rangle_\alpha\bigr)_{j,k=2}^n,\qquad
+b=\bigl(\langle G_k,E\rangle_\alpha\bigr)_{k=2}^n,\qquad
+\langle F,H\rangle_\alpha=\frac1{2\pi}\int_{-\infty}^{\infty}F(\alpha+it)\,\overline{H(\alpha+it)}\,dt.
+\]
+Los elementos de $A$ y $b$ son \emph{las mismas integrales de frontera} que ya calculamos: el
+c\'alculo es factible con la infraestructura existente (para $n$ hasta unos pocos miles, cuidando
+el mal condicionamiento de $A$). Siempre $d_n(\alpha)^2\le s_n(\alpha)$.
+
+\paragraph{Por qu\'e es interesante.} A diferencia de los coeficientes $\mu(k)$, la distancia
+$d_n$ \emph{s\'i} tiende a $0$ (bajo RH), pero muy lentamente. En el marco NBBD se conjetura
+\begin{conjecture}[Balazard--Saias; B\'aez-Duarte--Balazard--Landreau--Saias]
+\[
+d_n(1/2)^2\ \sim\ \frac{C}{\log n},\qquad n\to\infty,
+\]
+con $C$ expresable a trav\'es de los ceros no triviales; en particular interviene
+\[
+\sum_{\rho}\frac1{|\rho|^2}=2+\gamma-\log 4\pi\approx 0.0461.
+\]
+\end{conjecture}
+
+\begin{idea}
+Esto \emph{explica nuestros propios datos}: $1/\log(10^5)\approx0.087\sim10^{-1}$, justo el orden
+de los picos de $s_n$ en $\alpha=1/2$. La ``divergencia'' que vemos con $\mu(k)$ es el
+\emph{precio de los coeficientes expl\'icitos}; la distancia \emph{real} decae, pero tan despacio
+($1/\log n$) que a $n=10^5$ parece estancada.
+\end{idea}
+
+\paragraph{Experimento propuesto.}
+\begin{enumerate}[leftmargin=*]
+  \item Para $\alpha=1/2$ y $n$ creciente, computar $d_n(1/2)^2$ (matriz de Gram) y verificar si
+        $d_n(1/2)^2\cdot\log n$ se estabiliza cerca de la constante conjeturada.
+  \item Superponer en una figura las dos curvas: $s_n(\alpha)$ (coeficientes $\mu(k)$, oscila) y
+        $d_n(\alpha)^2$ (\'optima, decae $\sim1/\log n$). El contraste es la historia central.
+  \item Para $\alpha>1/2$, estimar la abscisa $\alpha_c$ a partir de $d_n(\alpha)$ y comparar con
+        $\Theta=1/2$.
+\end{enumerate}
+
+\paragraph{Qu\'e aporta al paper.} (i) Conecta con un problema c\'elebre (la ley $c/\log n$),
+otorgando sustancia te\'orico-num\'erica; (ii) convierte una ``divergencia decepcionante'' en un
+fen\'omeno \emph{explicado}; (iii) da una figura nueva y cuantitativa en lugar de una cualitativa.
+
+\paragraph{Referencias para conectar.}
+M.~Balazard, E.~Saias, \emph{Notes sur la fonction $\zeta$ de Riemann}, 1--4;
+L.~B\'aez-Duarte, M.~Balazard, B.~Landreau, E.~Saias, \emph{Notes\ldots\ 3}, Adv. Math. 149 (2000);
+J.-F.~Burnol; S.~Bettin, J.B.~Conrey, D.W.~Farmer.
+
+\bigskip
+
+\section*{Sugerencia 2: ley de tasa $\gamma(\alpha)$ y localizaci\'on de $\alpha_c$}
+
+\paragraph{El problema con lo actual.} Describimos el comportamiento de $s_n$ de forma cualitativa
+(``baja cerca de $1$, oscila cerca de $1/2$''). Un \'arbitro pide algo \emph{cuantitativo} y
+\emph{falsable}.
+
+\paragraph{Lo que conviene medir.} Tratar $\alpha$ como \emph{par\'ametro de control} y ajustar la
+envolvente (o los m\'inimos locales, dado que $s_n$ oscila) a una ley de potencias
+\[
+\underline{s}_n(\alpha)\ \sim\ C(\alpha)\,n^{-\gamma(\alpha)},
+\qquad \underline{s}_n(\alpha):=\min_{m\le n}s_m(\alpha),
+\]
+extraer $\gamma(\alpha)$ por regresi\'on en escala log--log, y graficar $\gamma$ frente a $\alpha$.
+El punto cr\'itico
+\[
+\alpha_c=\inf\{\alpha:\ \gamma(\alpha)>0\}
+\]
+es la estimaci\'on num\'erica de la transici\'on.
+
+\begin{idea}
+Es el lenguaje de las \emph{transiciones de fase} / \emph{finite-size scaling}: $\alpha$ es el
+par\'ametro de control, $\gamma(\alpha)$ el \emph{par\'ametro de orden}, y ``critical slowing
+down'' ($\gamma\to0^{+}$) marca la criticidad. Si num\'ericamente $\alpha_c\approx\tfrac12$,
+tenemos evidencia cuantitativa de $\Theta=\tfrac12$.
+\end{idea}
+
+\paragraph{Experimento propuesto.}
+\begin{enumerate}[leftmargin=*]
+  \item Con los datos hasta $n=10^5$, calcular la envolvente inferior $\underline{s}_n(\alpha)$
+        para cada $\alpha$ del barrido.
+  \item Ajustar $\log\underline{s}_n=\log C-\gamma\log n$ y reportar $\gamma(\alpha)$ con su
+        incertidumbre.
+  \item Graficar $\gamma(\alpha)$ y estimar $\alpha_c$ por extrapolaci\'on de $\gamma\to0$.
+\end{enumerate}
+
+\paragraph{Qu\'e aporta al paper.} Convierte dos p\'arrafos descriptivos en una curva
+$\gamma(\alpha)$ y un n\'umero $\alpha_c$ contrastable; ofrece la narrativa unificadora
+(``transici\'on'') que hoy falta.
+
+\bigskip
+
+\section*{Sugerencia 3: puente te\'orico v\'ia n\'ucleo reproductor (une teor\'ia y num\'erica)}
+
+\paragraph{El problema con lo actual.} La Proposici\'on solo da la implicaci\'on cualitativa
+(convergencia $\Rightarrow$ sin ceros). No hay un enunciado que \emph{cuantifique} la obstrucci\'on
+ni que ligue el error num\'erico a los ceros.
+
+\paragraph{Objetivo (demostrable).} Sea $k_w(s)=\dfrac1{s+\overline{w}-2\alpha}$ el n\'ucleo
+reproductor de $H^2(\C_\alpha)$, con $\|k_w\|_\alpha^2=k_w(w)=\dfrac1{2\Reop w-2\alpha}$. Si
+$\rho$ es un cero de $\zeta$ con $\Reop\rho>\alpha$, entonces \emph{toda} combinaci\'on
+$\sum_k c_kG_k$ se anula en $\rho$, luego para todo $n$ y cualesquiera coeficientes,
+\[
+\Bigl\|E-\sum_{k}c_kG_k\Bigr\|_\alpha^2
+\ \ge\ \frac{\bigl|E(\rho)\bigr|^2}{\|k_\rho\|_\alpha^2}
+\ =\ \frac{2\Reop\rho-2\alpha}{|\rho|^2}\ >\ 0 .
+\]
+En particular
+\[
+\liminf_{n\to\infty}s_n(\alpha)\ \ge\ d_n(\alpha)^2\ \ge\ \frac{2\,(\Reop\rho-\alpha)}{|\rho|^2},
+\]
+y, tomando varios ceros $\rho_1,\dots,\rho_m\in\C_\alpha$,
+\[
+d_n(\alpha)^2\ \ge\ v^{*}K^{-1}v,\qquad
+K=\Bigl(k_{\rho_i}(\rho_j)\Bigr)_{i,j}=\Bigl(\tfrac1{\rho_j+\overline{\rho_i}-2\alpha}\Bigr),\quad
+v=\bigl(1/\rho_i\bigr)_i .
+\]
+
+\begin{idea}
+Esto \textbf{identifica la obstrucci\'on con los ceros}: si existe un cero con $\Reop\rho>\alpha$,
+entonces $s_n(\alpha)\not\to0$, con una cota inferior expl\'icita. Junto con la Proposici\'on se
+obtiene, para la distancia \'optima, $\alpha_c\ge\Theta$; la direcci\'on rec\'iproca
+($\alpha>\Theta\Rightarrow$ convergencia) es la parte fina, tipo Bagchi. As\'i la num\'erica pasa a
+\emph{testear una f\'ormula}, no a ilustrar una intuici\'on.
+\end{idea}
+
+\paragraph{Qu\'e aporta al paper.} Un teorema corto y limpio (demostraci\'on de una l\'inea con el
+n\'ucleo reproductor) que \emph{pega} las dos mitades: la cota inferior por ceros es exactamente lo
+que la numérica mide cerca de la l\'inea cr\'itica. Es el tipo de a\~nadido que suele voltear un
+rechazo.
+
+\bigskip
+
+\section*{Sugerencia 4: subsucesiones convergentes}
+
+\paragraph{El problema con lo actual.} La introducci\'on afirma que ``alguna subsucesi\'on de $s_n$
+converge a $0$'', pero no se caracteriza ninguna.
+
+\paragraph{Lo que conviene medir.} El error hereda la estructura aritm\'etica del t\'ermino de cola
+$\phi_n$ (sumas parciales de M\"obius $\sum_{d\mid j,\,d\le n}\mu(d)$). Conviene identificar los
+$n$ donde $s_n$ cae y contrastarlos con familias con estructura de divisores especial:
+\begin{itemize}[leftmargin=*]
+  \item primoriales $n=\prod_{p\le x}p$ y factoriales;
+  \item n\'umeros \emph{suaves} (sin factores primos grandes);
+  \item $n$ justo por debajo de potencias de primo.
+\end{itemize}
+
+\paragraph{Experimento propuesto.} Marcar en la gr\'afica $s_n$ vs $n$ los valores de $n$
+primoriales/suaves y comprobar si coinciden con los m\'inimos; reportar la subsucesi\'on
+$\{n_j\}$ con mejor decaimiento y su tasa.
+
+\paragraph{Qu\'e aporta al paper.} Cumple una promesa hoy suelta y a\~nade una observaci\'on
+aritm\'etica concreta.
+
+\bigskip
+
+\section*{Retoques de marco (baratos, alto rendimiento)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{T\'itulo/enfoque}: llevar al frente el ``sensor de $\Theta$'' en lugar de las
+        ``regiones libres de ceros''.
+  \item \textbf{Reposicionar} el ``as difficult as RH'' en positivo: no es imposible; la transici\'on
+        \emph{coincide} con la l\'inea cr\'itica.
+  \item \textbf{Blindaje ante \'arbitros}: mostrar convergencia de la cuadratura $\int_0^\infty$
+        (truncamiento y tolerancia), barras de error, y justificar el tope en $n$.
+  \item \textbf{Reproducibilidad}: fijar la versi\'on de \texttt{scipy} (el soporte complejo de
+        \texttt{scipy.special.zeta} es reciente) junto a Python~3.13.
+\end{itemize}
+
+\bigskip
+
+\section*{Prioridad sugerida}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Sugerencia 1 + Sugerencia 3} transforman el paper: numérica con sustancia
+        (contraste $\mu(k)$ vs \'optima y ley $c/\log n$) anclada por un teorema (cota inferior por
+        ceros). Es la combinaci\'on de mayor impacto.
+  \item \textbf{Sugerencia 2} es el mejor envoltorio narrativo y es barato dado (1).
+  \item \textbf{Sugerencia 4} es un extra concreto que cumple una promesa de la introducci\'on.
+\end{enumerate}
+
+\end{document}
