@@ -5,6 +5,7 @@
 \usepackage[margin=2.4cm]{geometry}
 \usepackage{xcolor}
 \usepackage{booktabs}
+\usepackage{graphicx}
 \usepackage{enumitem}
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
@@ -285,6 +286,47 @@ coeficientes fijos $\mu(k)$ \emph{divergen}); $d_n^2$ decae monot\'ono. El cocie
 $s_n/d_n^2$ va de $\sim5$ a $\sim20$. Ese contraste es la figura central (Fig.~4 del
 paper).
 
+\section{Barrido en $\alpha$: el sensor de $\alpha_c$ (exploratorio, \emph{no} al paper)}
+\label{sec:sweep}
+
+Implementado en \code{dn\_sweep.py}. Para $\alpha\in[0.35,0.98]$ computamos
+$d_n(\alpha)^2$ (mismo m\'etodo denso) hasta $n=2560$, ajustamos un exponente aparente
+$\gamma(\alpha)$ por $d_n^2\sim C\,n^{-\gamma}$ (regresi\'on log--log en $160\le n\le
+2560$), y comparamos con el \emph{piso} del Teorema~3.2
+($v^{*}K^{-1}v$ con los $\sim20$ primeros ceros; positivo solo si $\alpha<1/2$).
+
+\paragraph{Resultado (honesto y con matiz).} \textbf{El barrido NO resuelve n\'itidamente
+$\alpha_c=1/2$.}
+\begin{itemize}[leftmargin=*]
+  \item $\gamma(\alpha)$ resulta \textbf{suave y mon\'otona, sin quiebre en $1/2$}
+        (de $\gamma\approx0.06$ en $\alpha=0.35$ a $\gamma\approx0.94$ en
+        $\alpha=0.98$; $\gamma(1/2)\approx0.16$). Extrapolar $\gamma\to0$ da un cruce en
+        $\alpha\approx0.31$, \emph{no} en $1/2$ (Fig.~\ref{fig:sweep}b).
+  \item La causa: a los $n$ accesibles, $d_n^2$ \textbf{sigue decreciendo aun para
+        $\alpha<1/2$} --- no ha llegado al piso del Teorema~3.2. Ej.: en $\alpha=0.47$,
+        $d_{2560}^2=8.3\times10^{-3}$ est\'a $9\times$ por encima del piso
+        $9.6\times10^{-4}$. Es de nuevo la lentitud $1/\log n$.
+  \item Lo \emph{riguroso} se sostiene: el piso es positivo para $\alpha<1/2$ y $d_n^2$
+        se mantiene por encima (consistente), pero lejos de saturar.
+\end{itemize}
+
+\paragraph{Por qu\'e no va al paper.} Una lectura ingenua ``$\alpha_c\approx0.31$''
+podr\'ia malinterpretarse como evidencia \emph{en contra} de RH, cuando es un
+artefacto de $n$ finito. El barrido queda como estudio interno: confirma que el
+funcional \emph{responde} a $\alpha$ de forma mon\'otona (buen ``sensor'' cualitativo),
+pero que localizar $\alpha_c$ con nitidez exige $n$ fuera de alcance --- lo que a su vez
+respalda el ``suggestive, not proof'' del paper.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth]{fig_sweep.pdf}
+\caption{(a) Familia $d_n(\alpha)^2$ vs $n$ (log--log): decae m\'as r\'apido al crecer
+$\alpha$. (b) Exponente aparente $\gamma(\alpha)$: suave, sin quiebre en $\alpha=1/2$;
+el ajuste lineal cruza $\gamma=0$ en $\alpha\approx0.31$ (artefacto de $n$ finito, no
+$\alpha_c$).}
+\label{fig:sweep}
+\end{figure}
+
 \section{Qu\'e se a\~nadi\'o al paper y c\'omo reproducir}
 
 \paragraph{En \code{riemann.tex}.}
@@ -306,6 +348,9 @@ paper).
         \code{.npz}.
   \item \code{dn\_gram.py} --- M\'etodo~2 (FFT) con su validaci\'on; queda como
         respaldo, \emph{no} se us\'o para los n\'umeros.
+  \item \code{dn\_sweep.py}, \code{dn\_sweep\_figure.py} --- barrido en $\alpha$
+        (Secci\'on~\ref{sec:sweep}); generan \code{dn\_sweep.npz} y
+        \code{latex/fig\_sweep.pdf}.
   \item \code{proto\_dn.py} --- prototipo inicial (conten\'ia el bug de coef.
         complejos; se conserva solo como historia).
 \end{itemize}
