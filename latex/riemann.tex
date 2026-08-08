@@ -722,7 +722,7 @@ square of that of the design matrix); we therefore solved in the numerically sta
 range $n \leq 5120$ and checked that $d_n^2$ is unchanged, to plotting accuracy,
 under refinement of the grid.
 
-Figure~\ref{fig:dn}(a) contrasts the two sequences. While $s_n$ (Möbius) stays near
+Figure~\ref{fig:dn} contrasts the two sequences. While $s_n$ (Möbius) stays near
 $10^{-1.5}$ with persistent oscillations, the optimal error $d_n^2$ decreases
 steadily, though very slowly. The Nyman--Beurling--B\'aez-Duarte theory predicts
 exactly this behaviour: in this circle of ideas one expects a law of the form
@@ -733,9 +733,9 @@ with a constant $C$ governed by the nontrivial zeros; in the closely related
 Nyman--Beurling setting the relevant constant is
 $\sum_{\rho} |\rho|^{-2} = 2 + \gamma - \log 4\pi \approx 0.0461$
 (see~\cite{baez}, \cite{Balazard}, \cite{Weingartner}).
-Figure~\ref{fig:dn}(b) plots $d_n^2 \log n$: after an initial transient the
+Table~\ref{tab:dn} lists $d_n^2 \log n$: after an initial transient the
 quantity settles into a plateau oscillating about $0.046$, in close agreement with
-this value (Table~\ref{tab:dn}). The same slow $1/\log n$ decay also accounts for
+this value. The same slow $1/\log n$ decay also accounts for
 the apparent stagnation of $s_n$ in Subsection~\ref{subsec:tol}: even at
 $n = 10^5$ one has $1/\log n \approx 0.087$, so the genuine error is still of
 order $10^{-2}$.
@@ -749,11 +749,10 @@ illustrate an intuition.
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=\textwidth]{fig_dn.pdf}
-\caption{Critical line $\alpha = 1/2$, for $2 \leq n \leq 5120$.
-(a) The optimal approximation error $d_n(1/2)^2$ (blue) versus the Möbius error
-$s_n$ (red), in log--log scale. (b) The scaled quantity $d_n(1/2)^2 \log n$ against
-$n$; the dashed line marks $\sum_\rho |\rho|^{-2} \approx 0.0461$.}
+\includegraphics[width=0.70\textwidth]{fig_dn.pdf}
+\caption{Critical line $\alpha = 1/2$, for $2 \leq n \leq 5120$: the optimal
+approximation error $d_n(1/2)^2$ (blue) versus the Möbius error $s_n$ (orange),
+in log--log scale.}
 \label{fig:dn}
 \end{figure}
 

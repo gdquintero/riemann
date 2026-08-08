@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.7.3)  11 JUL 2026 22:52
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.7.3)  8 AUG 2026 18:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -425,11 +425,11 @@ File: alpha09.pdf Graphic file (type pdf)
 Package pdftex.def Info: alpha09.pdf  used on input line 661.
 (pdftex.def)             Requested size: 357.31544pt x 209.41774pt.
  [11 <./alpha09.pdf>]
-<fig_dn.pdf, id=162, 664.88402pt x 267.39899pt>
+<fig_dn.pdf, id=162, 300.15642pt x 212.83514pt>
 File: fig_dn.pdf Graphic file (type pdf)
 <use fig_dn.pdf>
 Package pdftex.def Info: fig_dn.pdf  used on input line 752.
-(pdftex.def)             Requested size: 455.24408pt x 183.08559pt.
+(pdftex.def)             Requested size: 318.66946pt x 225.98413pt.
  [12] [13 <./fig_dn.pdf>] [14
 
 ] (./riemann.aux)
@@ -473,10 +473,10 @@ e/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/share/texmf-dist/fo
 nts/type1/public/cm-super/sfrm1728.pfb></usr/share/texmf-dist/fonts/type1/publi
 c/cm-super/sfti1095.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt
 1095.pfb>
-Output written on riemann.pdf (14 pages, 759418 bytes).
+Output written on riemann.pdf (14 pages, 757315 bytes).
 PDF statistics:
- 360 PDF objects out of 1000 (max. 8388607)
- 216 compressed objects within 3 object streams
+ 358 PDF objects out of 1000 (max. 8388607)
+ 224 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
