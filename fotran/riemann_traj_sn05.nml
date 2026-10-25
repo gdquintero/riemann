@@ -1,0 +1,14 @@
+! Exact Moebius error s_n(1/2) for every n = 2, ..., 5120 (Figure 3 and Table 2).
+! Usage: ./riemann_traj riemann_traj_sn05.nml  ->  traj_sn05/output_050.txt
+&params
+  alphas   = 0.50, 63*-1.0,            ! only alpha = 1/2 (the rest of the list is unused)
+  n_start  = 2,
+  n_step   = 1,
+  nmax     = 5120,
+  mmax     = 10000000,
+  m0       = 10000,
+  h        = 1e-3,
+  cap      = 32768,
+  nthreads = 20,
+  out_dir  = 'traj_sn05'
+/
