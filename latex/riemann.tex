@@ -76,11 +76,6 @@
     Juan Manzur\thanks{Department of Mathematics,
     Universidad del Atlántico, Puerto Colombia, Atlántico, Colombia. email: jcmanzur@mail.uniatlantico.edu.co}
     \and
-    Waleed Noor\thanks{Department of Mathematics,
-    Institute of Mathematics, Statistics and Scientific Computing,
-    State University of Campinas, CP 6065, 13081-970 Campinas
-    SP, Brazil. email: waleed@unicamp.br}
-    \and
     Gustavo Quintero\thanks{Department of Mathematics, Universidad del Atlántico, Puerto Colombia, Atlántico, Colombia. email: gdquintero@mail.uniatlantico.edu.co}
 }
 
@@ -651,8 +646,8 @@ computation was organised so that each block of values of $m$ stays in cache whi
 runs through all $n$, the blocks being processed in parallel. A Fortran~2008 program
 with OpenMP computed $s_n(\alpha)$ for the $51$ values
 $\alpha = 0.50, 0.51, \dots, 1.00$ and $3001$ logarithmically spaced values of
-$n \in [10^3, 10^6]$ in $40$ minutes on an Intel Core i7-13700KF processor
-($24$ threads), with $m_0 = 10^4$, $h = 10^{-3}$ and $M = 3 \cdot 10^8$.
+$n \in [10^3, 10^6]$ in $40$ minutes on the first machine described at the end of this
+subsection, with $m_0 = 10^4$, $h = 10^{-3}$ and $M = 3 \cdot 10^8$.
 The block expansion changes the results by less than $10^{-9}$ (relative) with respect
 to direct summation. Repeating the computation with $M = 10^8$ changes them by at most
 $3.5 \cdot 10^{-4}$, the largest differences occurring for $n$ close to $10^6$, and
@@ -688,9 +683,19 @@ ill-conditioned with $n$ (its condition number is the square of that of the
 underlying design matrix), the linear systems were solved only in the numerically
 stable range $n \leq 5120$.
 These computations were carried out in Python~3.13, with the Riemann zeta function
-taken from \texttt{scipy.special.zeta}, on a machine with a 5.2~GHz Intel Core
-i9-12900K processor and 128~GB of DDR4 RAM. The code generating all figures and
-tables of this section is available from the authors upon request.
+taken from \texttt{scipy.special.zeta}.
+
+\paragraph{Computing environment.}
+The M\"obius errors $s_n(\alpha)$ of Subsection~\ref{subsec:strip} were computed on a
+desktop computer with an Intel Core i7-13700KF processor (16 cores, 8 performance and
+8 efficiency cores, 24 hardware threads, maximum clock frequency 5.4~GHz, 30~MB of L3
+cache) and 32~GB of RAM, running Ubuntu~26.04~LTS (Linux kernel~7.0). The Fortran
+program was compiled with GNU Fortran~15.2 with the options
+\texttt{-O3 -march=native -fopenmp} and run with $20$ OpenMP threads. The optimal errors
+$d_n(1/2)^2$ of Subsection~\ref{subsec:dn} were computed on a workstation with a
+5.2~GHz Intel Core i9-12900K processor and 128~GB of DDR4 RAM, running
+Ubuntu~22.04~LTS. The code generating all figures and tables of this section is
+available from the authors upon request.
 
 \subsection{The M\"obius error across the strip}\label{subsec:strip}
 
