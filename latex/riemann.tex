@@ -654,11 +654,10 @@ $3.5 \cdot 10^{-4}$, the largest differences occurring for $n$ close to $10^6$, 
 runs with $M = 10^7, 10^8, 10^9$ for $n \leq 10^5$ show that the truncation error
 decreases roughly like $M^{-1.8}$; we therefore estimate the relative error of the
 values reported below to be smaller than $10^{-4}$.
-As independent checks, the representation~\eqref{eq:exact} reproduces to ten digits
-the identity $\langle E, G_k \rangle_{1/2} = G_k(1) = -(\log k)/k$, which holds because
-$E$ is the reproducing kernel of $H^2(\mathbb{C}_{1/2})$ at $s = 1$, and it agrees with
-direct quadrature of the boundary integral within the accuracy of the latter, which is
-typically of one percent.
+As an independent check, the values of $s_n(1/2)$ given by~\eqref{eq:exact} agree
+with those obtained from the Gram data described below, which are computed from the
+boundary integral and the zeta function, to within $3.4 \cdot 10^{-4}$ (relative) for
+$2 \leq n \leq 5120$, the median difference being $6 \cdot 10^{-5}$.
 
 \paragraph{Optimal error.} The optimal error of Subsection~\ref{subsec:lower} is
 computed on the critical line as
@@ -673,29 +672,37 @@ product reduces to a real half-line integral,
 = \frac{1}{\pi} \int_0^\infty \mathrm{Re}\,\bigl[G_j(\tfrac12+it)\,\overline{G_k(\tfrac12+it)}\bigr]\,dt,
 \]
 and likewise for $\langle E, G_k \rangle_{1/2}$; hence $A$ and $b$ are real and the
-minimising coefficients may be taken real. These
-boundary integrals were evaluated on a fixed quadrature grid of approximately
-$2.8 \times 10^4$ nodes, refined near $t = 0$ and with a geometric tail out to
-$t = 3 \times 10^5$. On this grid the exact value $\|E\|^2_{1/2} = 1/(2\alpha) = 1$
-is reproduced to six digits, and the computed values of $d_n^2$ are unchanged, to
-plotting accuracy, under refinement of the grid; since the Gram matrix grows
-ill-conditioned with $n$ (its condition number is the square of that of the
-underlying design matrix), the linear systems were solved only in the numerically
-stable range $n \leq 5120$.
-These computations were carried out in Python~3.13, with the Riemann zeta function
-taken from \texttt{scipy.special.zeta}.
+minimising coefficients may be taken real. These boundary integrals are evaluated with
+the trapezoidal rule on a fixed grid of $33\,600$ nodes, $8000$ of them equally spaced
+on $[0, 80)$ and $25\,600$ geometrically spaced on $[80, 3 \cdot 10^6]$, with
+$\zeta(\tfrac12 + it)$ computed by the Euler--Maclaurin formula with $N \geq 2|s|/\pi$
+terms and twelve Bernoulli corrections, whose remainder is negligible in double
+precision. On this grid $\|E\|^2_{1/2} = 1$ is reproduced to $1.1 \cdot 10^{-7}$, the
+values of $\langle E, G_k \rangle_{1/2}$ agree to within $10^{-4}$ (relative) with the
+exact value $G_k(1) = -(\log k)/k$, which holds because $E$ is the reproducing kernel of
+$H^2(\mathbb{C}_{1/2})$ at $s = 1$, and the values of $s_n(1/2)$ computed from the Gram
+data agree with~\eqref{eq:exact} as stated above; we therefore estimate the relative
+error of $d_n(1/2)^2$ to be of order $10^{-4}$. The Gram matrix for $n = 5120$ is
+factorised as $A = U^{\top} U$ (Cholesky), and with $y = U^{-\top} b$ the leading blocks
+of the factorisation give
+\[
+d_n(1/2)^2 = \|E\|^2_{1/2} - \sum_{i=1}^{n-1} y_i^2, \qquad 2 \leq n \leq 5120,
+\]
+for all $n$ at once. Although $A$ grows ill-conditioned with $n$, the factorisation
+remains numerically positive definite over the whole range.
 
 \paragraph{Computing environment.}
-The M\"obius errors $s_n(\alpha)$ of Subsection~\ref{subsec:strip} were computed on a
-desktop computer with an Intel Core i7-13700KF processor (16 cores, 8 performance and
-8 efficiency cores, 24 hardware threads, maximum clock frequency 5.4~GHz, 30~MB of L3
-cache) and 32~GB of RAM, running Ubuntu~26.04~LTS (Linux kernel~7.0). The Fortran
-program was compiled with GNU Fortran~15.2 with the options
-\texttt{-O3 -march=native -fopenmp} and run with $20$ OpenMP threads. The optimal errors
-$d_n(1/2)^2$ of Subsection~\ref{subsec:dn} were computed on a workstation with a
-5.2~GHz Intel Core i9-12900K processor and 128~GB of DDR4 RAM, running
-Ubuntu~22.04~LTS. The code generating all figures and tables of this section is
-available from the authors upon request.
+All the computations of this section were carried out with programs written in
+Fortran~2008 and parallelised with OpenMP, on a desktop computer with an Intel Core
+i7-13700KF processor (16 cores, 8 performance and 8 efficiency cores, 24 hardware
+threads, maximum clock frequency 5.4~GHz, 30~MB of L3 cache) and 32~GB of RAM, running
+Ubuntu~26.04~LTS (Linux kernel~7.0). The programs were compiled with GNU Fortran~15.2
+with the options \texttt{-O3 -march=native -fopenmp} and run with $20$ OpenMP threads;
+the matrix products and the Cholesky factorisation of the optimal-error computation use
+the BLAS and LAPACK libraries. The computation of $d_n(1/2)^2$ for $2 \leq n \leq 5120$
+took less than two minutes. The figures were produced with Python (Matplotlib) from the
+output of the Fortran programs. The code generating all figures and tables of this
+section is available from the authors upon request.
 
 \subsection{The M\"obius error across the strip}\label{subsec:strip}
 
@@ -806,8 +813,8 @@ coefficients from the picture by optimising over all of them. It is computed by
 the Gram matrix method of Subsection~\ref{subsec:method}.
 
 Figure~\ref{fig:dn} contrasts the two sequences, and Table~\ref{tab:dn} records
-their values at selected $n$. While the Möbius error $s_n(1/2)$ remains near
-$10^{-1.5}$ with persistent oscillations, the optimal error $d_n^2$ decreases
+their values at selected $n$. While the Möbius error $s_n(1/2)$ keeps oscillating
+between about $3 \cdot 10^{-2}$ and $3 \cdot 10^{-1}$, the optimal error $d_n^2$ decreases
 steadily, though very slowly, and satisfies $d_n^2 \leq s_n(1/2)$ throughout the
 computed range. The ``divergence'' on the critical line is therefore a statement
 about the coefficients rather than about the subspaces: the obstruction lies in the
@@ -819,7 +826,7 @@ to stable computation.
 \centering
 % The graphic is saved first so that the table can be centred inside a box of
 % exactly the same height; the two captions then start on the same line.
-\sbox{\dnbox}{\includegraphics[width=0.52\textwidth,viewport=0 0 331 267,clip]{fig_dn.pdf}}
+\sbox{\dnbox}{\includegraphics[width=0.52\textwidth]{fig_dn.pdf}}
 \begin{minipage}[t]{0.52\textwidth}
 \centering
 \vspace{0pt}
@@ -837,12 +844,12 @@ $s_n(1/2)$ (red) on the critical line, $2 \leq n \leq 5120$, in log--log scale.}
 $n$ & $d_n(1/2)^2$ & $s_n(1/2)$ \\
 \hline
 \hline
-$40$   & $1.273\mathrm{e}{-2}$ & $1.442\mathrm{e}{-1}$ \\
-$160$  & $9.355\mathrm{e}{-3}$ & $6.846\mathrm{e}{-2}$ \\
-$640$  & $7.022\mathrm{e}{-3}$ & $3.657\mathrm{e}{-2}$ \\
-$1280$ & $6.361\mathrm{e}{-3}$ & $3.473\mathrm{e}{-2}$ \\
-$2560$ & $5.931\mathrm{e}{-3}$ & $4.312\mathrm{e}{-2}$ \\
-$5120$ & $5.282\mathrm{e}{-3}$ & $3.850\mathrm{e}{-2}$ \\
+$40$   & $1.274\mathrm{e}{-2}$ & $1.442\mathrm{e}{-1}$ \\
+$160$  & $9.356\mathrm{e}{-3}$ & $6.847\mathrm{e}{-2}$ \\
+$640$  & $7.022\mathrm{e}{-3}$ & $3.659\mathrm{e}{-2}$ \\
+$1280$ & $6.363\mathrm{e}{-3}$ & $3.474\mathrm{e}{-2}$ \\
+$2560$ & $5.932\mathrm{e}{-3}$ & $4.314\mathrm{e}{-2}$ \\
+$5120$ & $5.283\mathrm{e}{-3}$ & $3.851\mathrm{e}{-2}$ \\
 \hline
 \end{tabular}}%
 % Pad by exactly the slack, so the table drops to the foot of the panel

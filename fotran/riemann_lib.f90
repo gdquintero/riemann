@@ -16,8 +16,10 @@ module riemann_lib
     use, intrinsic :: iso_c_binding,   only: c_double
     implicit none
     private
-    public :: dp, pow_diff, sieve, squarefree_divisors, geometric_blocks, weights, &
-              tail_mean, num, inum
+    public :: dp, pi, pow_diff, sieve, squarefree_divisors, geometric_blocks, weights, &
+              tail_mean, zeta_em, num, inum
+
+    real(dp), parameter :: pi = 3.14159265358979323846264338327950288_dp
 
     interface
         pure function c_expm1(x) bind(C, name="expm1") result(y)
@@ -179,6 +181,41 @@ contains
         end do
         tail_mean = ER * ER + Q / 12.0_dp
     end function tail_mean
+
+    ! Riemann zeta function for Re(s) > 0, s /= 1, by the Euler-Maclaurin formula
+    !   zeta(s) = sum_{n<N} n^(-s) + N^(1-s)/(s-1) + N^(-s)/2
+    !             + sum_{k=1}^{K} B_2k/(2k)! s(s+1)...(s+2k-2) N^(-s-2k+1) + R,
+    ! with N >= 2|s|/pi, so that |s|/(2 pi N) <= 1/4 and |R| ~ 4^(-2K) (K = 12).
+    complex(dp) function zeta_em(s) result(z)
+        complex(dp), intent(in) :: s
+
+        integer,  parameter :: K = 12
+        real(dp), parameter :: b2k(K) = [1.0_dp/6, -1.0_dp/30, 1.0_dp/42, -1.0_dp/30, &
+            5.0_dp/66, -691.0_dp/2730, 7.0_dp/6, -3617.0_dp/510, 43867.0_dp/798, &
+            -174611.0_dp/330, 854513.0_dp/138, -236364091.0_dp/2730]
+        integer     :: N, j, kk
+        real(dp)    :: fact, rN
+        complex(dp) :: Ns, poch, corr
+
+        N  = int(2.0_dp * abs(s) / pi) + 10
+        rN = real(N, dp)
+        z  = (0.0_dp, 0.0_dp)
+        do j = 1, N - 1
+            z = z + exp(-s * log(real(j, dp)))
+        end do
+        Ns = exp(-s * log(rN))
+        z  = z + rN * Ns / (s - 1.0_dp) + 0.5_dp * Ns
+
+        poch = s                       ! s (s+1) ... (s+2k-2)
+        fact = 2.0_dp                  ! (2k)!
+        corr = Ns / rN                 ! N^(-s-2k+1)
+        do kk = 1, K
+            z = z + b2k(kk) / fact * poch * corr
+            poch = poch * (s + real(2*kk - 1, dp)) * (s + real(2*kk, dp))
+            fact = fact * real(2*kk + 1, dp) * real(2*kk + 2, dp)
+            corr = corr / (rN * rN)
+        end do
+    end function zeta_em
 
     ! Text of x in format f without surrounding blanks
     function num(x, f) result(str)

@@ -1,0 +1,12 @@
+! Optimal error d_n(1/2)^2 of Subsection 4.3 for 2 <= n <= nmax (and s_n(1/2) from the
+! same Gram matrix, as a check).  Usage: ./riemann_dn riemann_dn.nml  ->  dn_f90.txt
+&params
+  nmax     = 5120,
+  T_fine   = 80.0,                   ! uniform step h_fine on [0, T_fine)
+  h_fine   = 0.01,
+  T_max    = 3.0e6,                  ! n_geo geometric nodes on [T_fine, T_max]
+  n_geo    = 25600,
+  block    = 128,                    ! column block of the Gram matrix per thread
+  nthreads = 20,
+  out_file = 'dn_f90.txt'
+/
