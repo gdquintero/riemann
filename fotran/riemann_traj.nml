@@ -1,0 +1,17 @@
+! Equivalent of ../riemann_1.py ... ../riemann_20.py (../run_all.py), repeated for the
+! alphas of Section 4.3: s_n(alpha) at n = 1000, 2000, ..., 100000.
+! Usage: ./riemann_traj riemann_traj.nml   ->  traj/output_050.txt, ..., traj/output_099.txt
+&params
+  alphas   = 0.50, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56, 0.57, 0.58, 0.59,
+             0.90, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99,
+  n_start  = 1000,                   ! n = n_start, n_start + n_step, ..., nmax
+  n_step   = 1000,
+  nmax     = 100000,
+  mmax     = 100000000,              ! terms of the sum over m kept explicitly (>= 100*nmax);
+                                     ! the time grows linearly with mmax
+  m0       = 10000,                  ! m <= m0 summed with exact weights
+  h        = 1e-3,                   ! relative width of the blocks for m > m0
+  cap      = 32768,                  ! largest block (it must stay in cache)
+  nthreads = 20,                     ! OpenMP threads (0 = OMP_NUM_THREADS)
+  out_dir  = 'traj'
+/
