@@ -1,0 +1,52 @@
+% Generado por tabla_tol.py
+\begin{table}[htb!]
+\centering
+\resizebox{0.5\textwidth}{!}{
+\begin{tabular}{|c|cc|cc|cc|}
+\hline
+\multirow{2}{*}{$\alpha$} & \multicolumn{2}{c|}{$\varepsilon = \mathrm{1e{-}2}$} & \multicolumn{2}{c|}{$\varepsilon = \mathrm{1e{-}3}$} & \multicolumn{2}{c|}{$\varepsilon = \mathrm{1e{-}4}$} \\
+\cline{2-7}
+ & $n$ & Time (s) & $n$ & Time (s) & $n$ & Time (s) \\
+\hline\hline
+0.50 & $>10000$ & $2.089\mathrm{e}{+1}$ & $>10000$ & $2.091\mathrm{e}{+1}$ & $>10000$ & $2.083\mathrm{e}{+1}$ \\
+0.55 & $>10000$ & $2.089\mathrm{e}{+1}$ & $>10000$ & $2.091\mathrm{e}{+1}$ & $>10000$ & $2.083\mathrm{e}{+1}$ \\
+0.60 & 209 & $5.240\mathrm{e}{-1}$ & $>10000$ & $2.091\mathrm{e}{+1}$ & $>10000$ & $2.083\mathrm{e}{+1}$ \\
+0.65 & 34 & $1.510\mathrm{e}{-1}$ & $>10000$ & $2.091\mathrm{e}{+1}$ & $>10000$ & $2.083\mathrm{e}{+1}$ \\
+0.70 & 11 & $1.000\mathrm{e}{-1}$ & 3598 & $7.644\mathrm{e}{+0}$ & $>10000$ & $2.083\mathrm{e}{+1}$ \\
+0.75 & 7 & $9.300\mathrm{e}{-2}$ & 610 & $1.363\mathrm{e}{+0}$ & $>10000$ & $2.083\mathrm{e}{+1}$ \\
+0.80 & 7 & $9.300\mathrm{e}{-2}$ & 209 & $5.150\mathrm{e}{-1}$ & 9001 & $1.876\mathrm{e}{+1}$ \\
+0.85 & 5 & $8.500\mathrm{e}{-2}$ & 86 & $2.540\mathrm{e}{-1}$ & 3046 & $6.387\mathrm{e}{+0}$ \\
+0.90 & 5 & $8.500\mathrm{e}{-2}$ & 42 & $1.660\mathrm{e}{-1}$ & 718 & $1.585\mathrm{e}{+0}$ \\
+0.95 & 5 & $8.500\mathrm{e}{-2}$ & 34 & $1.450\mathrm{e}{-1}$ & 410 & $9.370\mathrm{e}{-1}$ \\
+\hline
+\end{tabular}
+}
+\caption{Fortran (\texttt{riemann\_tol}): smallest $n$ with $s_n(\alpha) < \varepsilon$ and elapsed time; $>n$ means not reached for $n \leq 10^4$.}
+\label{tab:tolerance-f90}
+\end{table}
+
+\begin{table}[htb!]
+\centering
+\resizebox{0.5\textwidth}{!}{
+\begin{tabular}{|c|cc|cc|cc|}
+\hline
+\multirow{2}{*}{$\alpha$} & \multicolumn{2}{c|}{$\varepsilon = \mathrm{1e{-}2}$} & \multicolumn{2}{c|}{$\varepsilon = \mathrm{1e{-}3}$} & \multicolumn{2}{c|}{$\varepsilon = \mathrm{1e{-}4}$} \\
+\cline{2-7}
+ & $n$ & Time (s) & $n$ & Time (s) & $n$ & Time (s) \\
+\hline\hline
+0.50 & 740 & $3.604\mathrm{e}{+3}$ & 740 & $3.602\mathrm{e}{+3}$ & 740 & $3.603\mathrm{e}{+3}$ \\
+0.55 & 766 & $3.606\mathrm{e}{+3}$ & 766 & $3.607\mathrm{e}{+3}$ & 766 & $3.606\mathrm{e}{+3}$ \\
+0.60 & 210 & $2.941\mathrm{e}{+2}$ & 791 & $3.600\mathrm{e}{+3}$ & 791 & $3.601\mathrm{e}{+3}$ \\
+0.65 & 35 & $8.237\mathrm{e}{+0}$ & 803 & $3.607\mathrm{e}{+3}$ & 803 & $3.610\mathrm{e}{+3}$ \\
+0.70 & 12 & $8.330\mathrm{e}{-1}$ & 811 & $3.606\mathrm{e}{+3}$ & 811 & $3.607\mathrm{e}{+3}$ \\
+0.75 & 8 & $3.520\mathrm{e}{-1}$ & 611 & $2.084\mathrm{e}{+3}$ & 807 & $3.607\mathrm{e}{+3}$ \\
+0.80 & 8 & $3.501\mathrm{e}{-1}$ & 210 & $2.792\mathrm{e}{+2}$ & 813 & $3.600\mathrm{e}{+3}$ \\
+0.85 & 6 & $1.764\mathrm{e}{-1}$ & 87 & $4.466\mathrm{e}{+1}$ & 826 & $3.602\mathrm{e}{+3}$ \\
+0.90 & 6 & $1.765\mathrm{e}{-1}$ & 43 & $1.057\mathrm{e}{+1}$ & 719 & $2.815\mathrm{e}{+3}$ \\
+0.95 & 6 & $1.757\mathrm{e}{-1}$ & 35 & $6.988\mathrm{e}{+0}$ & 327 & $6.333\mathrm{e}{+2}$ \\
+\hline
+\end{tabular}
+}
+\caption{Python (\texttt{scipy.integrate.quad}), as in the paper: entries at the $3600$~s cap were not attained; $n$ reported as $n+1$.}
+\label{tab:tolerance-py}
+\end{table}

@@ -1,0 +1,17 @@
+! Equivalent of ../riemann_0.0001.py: for each alpha, smallest n with s_n(alpha) <= 0.0001.
+! Usage: ./riemann_tol riemann_0.0001.nml
+&params
+  alpha_min  = 0.5,                  ! alpha grid = linspace(alpha_min, alpha_max, npts),
+  alpha_max  = 0.995,                ! as np.linspace(0.5, 0.995, points) in Python
+  npts       = 100,
+  tol        = 0.0001,
+  nmax       = 10000,                ! largest n (replaces the 3600 s time budget)
+  mmax       = 10000000,             ! terms of the sum over m kept explicitly (>= 100*nmax)
+  m0         = 10000,                ! m <= m0 summed with exact weights
+  h          = 1e-3,                 ! relative width of the blocks for m > m0
+  full       = .false.,              ! .true.: run to nmax even after tol is reached
+  traj_every = 0,                    ! > 0: write s_n(alpha) for n multiple of traj_every
+  out_file   = 'output_tol_0.0001.txt',
+  traj_file  = 'traj_0.0001.txt',
+  nthreads   = 8                     ! OpenMP threads (0 = OMP_NUM_THREADS); memory bound
+/

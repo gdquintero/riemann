@@ -1,0 +1,4 @@
+riemann_tol
+riemann_traj
+*.mod
+*.o

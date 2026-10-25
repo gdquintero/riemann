@@ -1,0 +1,24 @@
+done: 51 alphas x 3001 values of n in    2395.08 s  ->  traj_1e6/
+	Command being timed: "./riemann_traj riemann_traj_1e6.nml"
+	User time (seconds): 46926.84
+	System time (seconds): 36.21
+	Percent of CPU this job got: 1960%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 39:55.33
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1220956
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 305642
+	Voluntary context switches: 107
+	Involuntary context switches: 2382008
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8576
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
