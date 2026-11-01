@@ -4,30 +4,17 @@
 \usepackage{amsthm}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{xcolor}	
+\usepackage{xcolor}
 \usepackage{graphicx}
 \usepackage{caption}
-\usepackage{subcaption}
 \usepackage{multirow}
-\usepackage{float}
-\usepackage{enumitem}
-\usepackage{titlesec}
+\usepackage{placeins}
 %\usepackage{hyperref}
-
-\usepackage{pdflscape}
-\usepackage{fancyhdr}
-\usepackage{booktabs}
 
 % Show line numbers
 \usepackage[mathlines]{lineno}
 \renewcommand\linenumberfont{\normalfont\small\color{gray}}
 % \linenumbers
-
-% Show labels
-% \usepackage{showlabels}
-
-\newsavebox{\dnbox}
-\newsavebox{\dntab}
 
 % Float placement: the defaults are too restrictive for the large
 % figure/table pairs of Section 4 and push them onto pages of their own.
@@ -37,35 +24,19 @@
 \renewcommand{\floatpagefraction}{0.8}
 
 \numberwithin{equation}{section}
-\usepackage{lipsum}
 \setlength{\textwidth}     {16.0cm}
 \setlength{\textheight}    {21.0cm}
 \setlength{\evensidemargin}{ 0.0cm}
 \setlength{\oddsidemargin} { 0.0cm}
 \setlength{\topmargin}     {-0.5cm}
-\setlength{\baselineskip}  { 0.7cm}
 
-
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\D}{\mathbb{D}}
-\newcommand{\C}{\mathbb{C}}
-\newcommand{\N}{\mathbb{N}}
-\newcommand{\Z}{\mathbb{Z}}
-\newcommand{\dirichlet}{\mathcal{H}^2}
-
+% A single counter, numbered within sections, for all numbered statements
 \theoremstyle{plain}
-\newtheorem{example}{Example}[section]
 \newtheorem{theorem}{Theorem}[section]
-\newtheorem{corollary}{Corollary}[section]
-\newtheorem{lemma}{Lemma}[section]
-\newtheorem{proposition}{Proposition}[section]
-\newtheorem{axiom}{Axiom}[section]
-\newtheorem{remark}{Remark}[section]
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{assumption}{Assumption}
-\renewcommand\theassumption{A\arabic{assumption}}
-\newcommand{\expnumber}[2]{{#1}\mathrm{E}{#2}}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
 
 
 \begin{document}
@@ -79,35 +50,31 @@
     Gustavo Quintero\thanks{Department of Mathematics, Universidad del Atlántico, Puerto Colombia, Atlántico, Colombia. email: gdquintero@mail.uniatlantico.edu.co}
 }
 
-\date\today
+\date{}
 \maketitle
 
 \begin{abstract}
-By a theorem of Bagchi~\cite{bagchi}, the Riemann Hypothesis (RH) holds if and only if
+By a theorem of Bagchi, the Riemann Hypothesis (RH) holds if and only if
 $E(s) = 1/s$ belongs to the closed linear span of
 $G_k(s) = (k^{-s} - k^{-1})\zeta(s)/s$, $k \geq 2$, in the Hardy space
 $H^2(\mathbb{C}_{1/2})$, where $\mathbb{C}_\alpha$ denotes the half-plane
 $\mathrm{Re}(s) > \alpha$. The formal M\"obius expansion
-$E = \sum_{k \geq 2} \mu(k) G_k$ is the Hardy-space counterpart of a series that
-B\'aez-Duarte~\cite{baez-unitary} proved to diverge in $L^2$, so its partial sums $S_n$ do not
-converge on the critical line. We study this expansion on the whole scale of spaces
-$H^2(\mathbb{C}_\alpha)$. We show that convergence of $S_n$ to $E$ in
-$H^2(\mathbb{C}_\alpha)$, and more generally membership of $E$ in the closed span of
-the $G_k$, forces $\zeta$ to be zero-free in $\mathbb{C}_\alpha$, and we prove that
-$S_n \to E$ in $H^2(\mathbb{C}_\alpha)$ for every $\alpha > 1$. Quantitatively, a
-single zero of $\zeta$ in $\mathbb{C}_\alpha$ keeps the error $d_n(\alpha)^2$ of
-best approximation of $E$ by $G_2, \dots, G_n$ uniformly away from zero; hence the
-threshold $\alpha_c$ beyond which $d_n(\alpha)^2 \to 0$ equals $1/2$ if and only if
-RH holds. To explore the critical strip, we express the M\"obius error
-$s_n(\alpha) = \|S_n - E\|^2_\alpha$ as a series with elementary terms, free of
-$\zeta$ and of numerical quadrature, and compute it for $n \leq 10^6$ and
-$1/2 \leq \alpha \leq 1$: on the critical line $s_n(1/2)$ oscillates without
-decaying, whereas for $\alpha > 1/2$ the oscillations decay at a rate close to
-$n^{1-2\alpha}$. Meanwhile, the optimal error $d_n(1/2)^2$ behaves like
-$0.046/\log n$ for $n \leq 5120$, in agreement with earlier computations by
-B\'aez-Duarte, Balazard, Landreau and Saias; since $d_n(1/2)^2 \to 0$ under RH while
-$s_n(1/2) \not\to 0$, under RH the obstruction on the critical line lies in the
-M\"obius coefficients rather than in the approximating subspaces.
+$E = \sum_{k \geq 2} \mu(k) G_k$ corresponds to a series that B\'aez-Duarte proved
+to diverge in $L^2$, so its partial sums $S_n$ do not converge on the critical line.
+We study this expansion in the scale of spaces $H^2(\mathbb{C}_\alpha)$. We show that
+membership of $E$ in the closed span of the $G_k$ in $H^2(\mathbb{C}_\alpha)$ forces
+$\zeta$ to be zero-free in $\mathbb{C}_\alpha$, that $S_n \to E$ in
+$H^2(\mathbb{C}_\alpha)$ for every $\alpha > 1$, and that a single zero of $\zeta$ in
+$\mathbb{C}_\alpha$ keeps the best-approximation error $d_n(\alpha)^2$ away from zero;
+hence the threshold beyond which $d_n(\alpha)^2 \to 0$ equals $1/2$ if and only if RH
+holds. We express the M\"obius error $s_n(\alpha) = \|S_n - E\|^2_\alpha$ as a series
+with elementary terms, free of $\zeta$, and compute it for $n \leq 10^6$ and
+$1/2 \leq \alpha \leq 1$: $s_n(1/2)$ oscillates without decaying, whereas for
+$\alpha > 1/2$ the oscillations decay at a rate close to $n^{1-2\alpha}$. On the
+critical line the optimal error $d_n(1/2)^2$ behaves like $0.046/\log n$ for
+$100 \leq n \leq 5120$, in agreement with earlier computations by B\'aez-Duarte,
+Balazard, Landreau and Saias; under RH, the obstruction on the critical line thus lies
+in the M\"obius coefficients rather than in the approximating subspaces.
 
 \bigskip
 \noindent
@@ -120,7 +87,7 @@ M\"obius coefficients rather than in the approximating subspaces.
 
 
 
-\section{Introduction}
+\section{Introduction}\label{sec:intro}
 
 The Riemann Hypothesis (RH) asserts that all non-trivial zeros of the Riemann
 zeta function lie on the critical line $\mathrm{Re}(s) = \frac{1}{2}$. Its
@@ -246,17 +213,18 @@ $n^{1-2\alpha}$ over the computed range. Finally,
 in the spirit of Weingartner's theorem, we compare on the critical line the
 M\"obius error $s_n(1/2)$ with the optimal error $d_n(1/2)^2$, the distance from $E$
 to $\mathrm{span}\{G_2, \dots, G_n\}$. While $s_n(1/2)$ keeps oscillating,
-$d_n(1/2)^2$ behaves like $0.046/\log n$ over the computed range, in agreement with
+$d_n(1/2)^2$ behaves like $0.046/\log n$ for $100 \leq n \leq 5120$, in agreement with
 the computations of B\'aez-Duarte, Balazard, Landreau and Saias~\cite{BBLS}. Since
 $d_n(1/2)^2 \to 0$ under RH, whereas $s_n(1/2) \not\to 0$ unconditionally, under RH
 the failure at $\alpha = 1/2$ lies in the fixed choice of coefficients $\mu(k)$
 rather than in the subspaces themselves.
 
-Section~2 introduces the function spaces and the results needed later.
-Section~3 develops the theoretical framework and proves the results described
-above. Section~4 presents the numerical experiments and their implications.
+Section~\ref{sec:prelim} introduces the function spaces and the results needed
+later. Section~\ref{sec:approx} develops the theoretical framework and proves the
+results described above. Section~\ref{sec:numerics} presents the numerical
+experiments and their implications.
 
-\section{Preliminaries}
+\section{Preliminaries}\label{sec:prelim}
 
 We collect the function spaces and key results needed throughout the paper. The three Hilbert spaces $H^2(\mathbb{D})$, $\mathcal{H}^2$, and $H^2(\mathbb{C}_{1/2})$ are introduced here as the analytic framework within which the completeness conditions equivalent to the Riemann Hypothesis are formulated and studied.
 
@@ -290,6 +258,7 @@ Setting $H^2_0(\mathbb{D}) = H^2(\mathbb{D}) \ominus \mathbb{C}$, there exists a
 \[
 \psi : H^2_0(\mathbb{D}) \longrightarrow \mathcal{H}^2, \qquad z^k \longmapsto k^{-s}.
 \]
+In what follows we write $H^2_0 = H^2_0(\mathbb{D})$.
 
 
 \subsection{The Hardy spaces $H^2(\mathbb{C}_\alpha)$}
@@ -318,7 +287,7 @@ The Riemann Hypothesis reformulation for $H^2(\mathbb{C}_{1/2})$ can be stated a
 RH is true if and only if $E$ belongs to the closed linear span of $\{G_k : k \geq 2\}$ in $H^2(\mathbb{C}_{1/2})$.
 \end{theorem}
 
-\section{An $H^2(\mathbb{C}_\alpha)$ approximation approach}
+\section{An $H^2(\mathbb{C}_\alpha)$ approximation approach}\label{sec:approx}
 
 The main goal of this section is to show that $E$ belongs to the closed linear span 
 of $\{G_k : k \geq 2\}$ in $H^2(\mathbb{C}_\alpha)$, for every $\alpha > 1$. 
@@ -362,7 +331,7 @@ and
 = (1-k^{1-s})\frac{\zeta(s)}{s} = -kG_k(s).
 \]
 
-\subsection{Zero free region of $\zeta$ in $\mathbb{C}_\alpha$}
+\subsection{Zero-free region of $\zeta$ in $\mathbb{C}_\alpha$}
 
 We now establish one of the main results of the paper. The key step is the following 
 generalization of Lemma~\ref{lem1:waleed} to the family $\{g_{k,\tau}\}$.
@@ -379,7 +348,8 @@ Since $g_{1,\tau}\equiv 0$, the $k=1$ term may be included, giving
 &= \sum_{k=1}^{n} \frac{\mu(k)}{k^\tau} \left\{ k^{\tau-1}\sum_{j=1}^{\infty} \frac{z^j}{j^\tau} - \sum_{j=1}^{\infty}\frac{z^{jk}}{j^\tau} \right\}\\
 &= \sum_{k=1}^{n} \frac{\mu(k)}{k} \sum_{j=1}^{\infty} \frac{z^j}{j^\tau} - \sum_{k=1}^{n} \frac{\mu(k)}{k^\tau} \sum_{j=1}^{\infty}\frac{z^{jk}}{j^\tau}.
 \end{align*}
-Since $\sum_{k=1}^{\infty} \frac{\mu(k)}{k} = 0$, the first term vanishes in the limit:
+Since $\sum_{k=1}^{\infty} \mu(k)/k = 0$, a statement equivalent to the prime number
+theorem~\cite[Ch.~4]{apostol}, the first term vanishes in the limit:
 \[
 \left\|\sum_{k=1}^{n} \frac{\mu(k)}{k} \sum_{j=1}^{\infty} \frac{z^j}{j^\tau}\right\|_{H^2_0} 
 = \left|\sum_{k=1}^{n} \frac{\mu(k)}{k}\right| \left\|\sum_{j=1}^{\infty} \frac{z^j}{j^\tau}\right\|_{H^2_0} \longrightarrow 0.
@@ -392,9 +362,10 @@ A rearrangement of the double sum gives
 \begin{align}
 \sum_{k=1}^{n} \frac{\mu(k)}{k^\tau} \sum_{j=1}^{\infty}\frac{z^{jk}}{j^\tau}
 &= \sum_{j=1}^{n} \frac{z^j}{j^\tau}\left(\sum_{\substack{d|j,\\ 1\leq d\leq n}}\mu(d)\right) + \sum_{j=n+1}^{\infty} \frac{z^j}{j^\tau}\left(\sum_{\substack{d|j,\\ 1\leq d\leq n}}\mu(d)\right)\notag\\
-&= \sum_{j=1}^{n} \frac{z^j}{j^\tau}\left[\frac{1}{j}\right] + \sum_{j=n+1}^{\infty} \frac{z^j}{j^\tau}\left(\sum_{\substack{d|j,\\ 1\leq d\leq n}}\mu(d)\right), \label{eq:rearrange}
+&= \sum_{j=1}^{n} \frac{z^j}{j^\tau}\left\lfloor\frac{1}{j}\right\rfloor + \sum_{j=n+1}^{\infty} \frac{z^j}{j^\tau}\left(\sum_{\substack{d|j,\\ 1\leq d\leq n}}\mu(d)\right), \label{eq:rearrange}
 \end{align}
-where the last equality uses the identity $\sum_{d|j}\mu(d) = \left[\frac{1}{j}\right]$. From~\eqref{eq:rearrange},
+where the last equality uses the identity $\sum_{d|j}\mu(d) = \lfloor 1/j \rfloor$, which
+equals $1$ for $j = 1$ and $0$ for $j \geq 2$~\cite[Theorem~2.1]{apostol}. From~\eqref{eq:rearrange},
 \[
 \sum_{k=1}^{n} \frac{\mu(k)}{k^\tau} \sum_{j=1}^{\infty}\frac{z^{jk}}{j^\tau} = z + \phi_n(z),
 \]
@@ -403,16 +374,16 @@ where
 \phi_n(z) = \sum_{j=n+1}^{\infty} \left(\frac{1}{j^\tau}\sum_{\substack{d|j,\\ 1\leq d\leq n}}\mu(d)\right) z^j.
 \]
 It remains to show that $\|\phi_n\|_{H^2_0} \to 0$ as $n \to \infty$. 
-Letting $d(n)$ denote the number of divisors of $n$, we estimate
+Letting $\sigma_0(j)$ denote the number of divisors of $j$, we estimate
 \[
 \|\phi_n\|^2_{H^2_0} = \sum_{j=n+1}^{\infty} \frac{1}{j^{2\tau}}\left|\sum_{\substack{d|j,\\ 1\leq d\leq n}}\mu(d)\right|^2 
 \leq \sum_{j=n+1}^{\infty} \frac{1}{j^{2\tau}}\left(\sum_{d|j}1\right)^2
-= \sum_{j=n+1}^{\infty} \frac{d(j)^2}{j^{2\tau}}.
+= \sum_{j=n+1}^{\infty} \frac{\sigma_0(j)^2}{j^{2\tau}}.
 \]
-Since $d(n) = o(n^\epsilon)$ for every $\epsilon > 0$, choosing $\epsilon > 0$
-such that $\tau > 1/2 + \epsilon$ yields
+Since $\sigma_0(j) = o(j^\epsilon)$ for every $\epsilon > 0$, choosing $\epsilon > 0$
+such that $\tau > 1/2 + \epsilon$ yields, for some constant $C_\epsilon > 0$,
 \[
-\|\phi_n\|^2_{H^2_0} \lesssim \sum_{j=n+1}^{\infty} \frac{j^{2\epsilon}}{j^{2\tau}} 
+\|\phi_n\|^2_{H^2_0} \leq C_\epsilon \sum_{j=n+1}^{\infty} \frac{j^{2\epsilon}}{j^{2\tau}} 
 = \sum_{j=n+1}^{\infty} \frac{1}{j^{2\tau - 2\epsilon}} \longrightarrow 0,
 \]
 since $2\tau - 2\epsilon > 1$.
@@ -460,13 +431,6 @@ Hilbert space, convergence in norm implies pointwise convergence, so
 $E(\rho) = 1/\rho = 0$, which is impossible.
 \end{proof}
 
-% \begin{remark}
-% Combining Corollary~\ref{cor:main} with Proposition~\ref{main-prop} shows that
-% $\zeta(s) \neq 0$ on $\mathbb{C}_\alpha$ for every $\alpha > 1$. Since
-% $\mathbb{C}_1 = \bigcup_{\alpha > 1}\mathbb{C}_\alpha$, this recovers the classical
-% non-vanishing of $\zeta$ on the half-plane $\mathbb{C}_1$.
-% \end{remark}
-
 \subsection{A lower bound from the zeros of $\zeta$}\label{subsec:lower}
 
 Proposition~\ref{main-prop} is qualitative: it turns convergence into a zero-free
@@ -481,9 +445,10 @@ d_n(\alpha)^2 := \inf_{c_2, \dots, c_n \in \mathbb{C}}
 \]
 the best approximation of $E$ by the first $n-1$ generators. The restriction
 $\alpha > 0$ is precisely what is needed for $E$ and the $G_k$ to belong to
-$H^2(\mathbb{C}_\alpha)$: both are analytic on $\mathbb{C}_\alpha$, the factor
-$k^{-s} - k^{-1}$ vanishing at $s = 1$ and so cancelling the pole of $\zeta$,
-whereas for $\alpha \leq 0$ they have a pole at $s = 0$. Taking
+$H^2(\mathbb{C}_\alpha)$: they are Mellin transforms of bounded functions supported
+in $(0,1]$, and therefore belong to $H^2(\mathbb{C}_\alpha)$ for every $\alpha > 0$
+(see the proof of Proposition~\ref{prop:exact}), whereas for $\alpha \leq 0$ they have
+a pole at $s = 0$. Taking
 $c_k = \mu(k)$ shows $d_n(\alpha)^2 \leq \|S_n - E\|^2_\alpha$, so any lower bound
 for $d_n(\alpha)^2$ is a fortiori one for the Möbius error.
 
@@ -496,7 +461,7 @@ $c_2, \dots, c_n \in \mathbb{C}$,
 \ \geq\ \frac{|E(\rho)|^2}{\|k_\rho\|^2_\alpha}
 \ =\ \frac{2\,(\mathrm{Re}\,\rho - \alpha)}{|\rho|^2}\ >\ 0.
 \]
-More generally, if $\rho_1, \dots, \rho_m$ are zeros of $\zeta$ in
+More generally, if $\rho_1, \dots, \rho_m$ are distinct zeros of $\zeta$ in
 $\mathbb{C}_\alpha$, then for every $n \geq 2$,
 \[
 d_n(\alpha)^2 \ \geq\ v^{*} K^{-1} v, \qquad
@@ -534,13 +499,13 @@ A standard computation with the kernels gives
 $\| P E \|^2_\alpha = v^{*} K^{-1} v$, where
 $K_{ij} = \langle k_{\rho_j}, k_{\rho_i} \rangle_\alpha = k_{\rho_j}(\rho_i)
 = (\rho_i + \overline{\rho_j} - 2\alpha)^{-1}$ and
-$v_i = \langle E, k_{\rho_i} \rangle_\alpha = \overline{E(\rho_i)}$. Taking the
+$v_i = \langle E, k_{\rho_i} \rangle_\alpha = E(\rho_i) = 1/\rho_i$. Taking the
 infimum over $c$ yields the bound on $d_n(\alpha)^2$; the right-hand side is a fixed
 positive constant, so $d_n(\alpha)^2 \not\to 0$.
 \end{proof}
 
 \begin{corollary}\label{cor:sensor}
-Let $\Theta = \sup\{\mathrm{Re}\,\rho : \zeta(\rho) = 0\}$ and $\alpha_c = \inf\bigl\{\alpha \geq \tfrac12 : d_n(\alpha)^2 \to 0\bigr\}$. Then $\tfrac12 \leq \Theta \leq \alpha_c \leq 1$, and $\alpha_c = \tfrac12$ if and only if RH holds.
+Let $\Theta = \sup\{\mathrm{Re}\,\rho : \rho \text{ a non-trivial zero of } \zeta\}$ and $\alpha_c = \inf\bigl\{\alpha \geq \tfrac12 : d_n(\alpha)^2 \to 0\bigr\}$. Then $\tfrac12 \leq \Theta \leq \alpha_c \leq 1$, and $\alpha_c = \tfrac12$ if and only if RH holds.
 \end{corollary}
 
 \begin{proof}
@@ -549,14 +514,14 @@ nonempty and bounded below by $\tfrac12$, so $\alpha_c$ is well-defined and $\al
 For $\alpha < \Theta$ pick a zero $\rho$ with $\mathrm{Re}\,\rho > \alpha$;
 Theorem~\ref{thm:lower} gives $d_n(\alpha)^2 \not\to 0$, whence $\Theta \leq \alpha_c$.
 As $\Theta \geq \tfrac12$ is classical, $\tfrac12 \leq \Theta \leq \alpha_c \leq 1$. If
-$\alpha_c = \tfrac12$ then $\Theta = \tfrac12$, which is RH. Conversely, under RH, Theorem~2.2 places $E$ in the closed linear span of
+$\alpha_c = \tfrac12$ then $\Theta = \tfrac12$, which is RH. Conversely, under RH, Theorem~\ref{thm:bagchi} places $E$ in the closed linear span of
 $\{G_k\}_{k\ge2}$ in $H^2(\mathbb{C}_{1/2})$. Since $d_n(1/2)$ is non-increasing
 in $n$, this forces $d_n(1/2)^2\to0$; hence $\alpha=\tfrac12$ belongs to the set
 $\{\alpha\ge\tfrac12:d_n(\alpha)^2\to0\}$, so that $\alpha_c\le\tfrac12$.
 Combined with $\Theta\ge\tfrac12$, this gives $\alpha_c=\tfrac12$.
 \end{proof}
 
-\section{Numerical experiments}
+\section{Numerical experiments}\label{sec:numerics}
 
 The range $1/2 \leq \alpha \leq 1$ left open by Theorem~\ref{main-teo} lies beyond
 the reach of our analytical methods; this section probes it numerically. Two
@@ -934,6 +899,45 @@ $\mathrm{span}\{G_2, \dots, G_n\}$ on the critical line, which removes the
 coefficients from the picture by optimising over all of them. It is computed by
 the Gram matrix method of Subsection~\ref{subsec:method}.
 
+\begin{figure}[htb!]
+\centering
+% Row 1: graphic and table, centred vertically on each other; row 2: the two captions,
+% top-aligned so that they start on the same line.
+\begin{minipage}[c]{0.54\textwidth}
+\centering
+\includegraphics[width=\linewidth]{fig_dn.pdf}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\textwidth}
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|r|c|c|}
+\hline
+$n$ & $d_n(1/2)^2$ & $s_n(1/2)$ \\
+\hline
+\hline
+$40$   & $1.274\mathrm{e}{-2}$ & $1.442\mathrm{e}{-1}$ \\
+$160$  & $9.357\mathrm{e}{-3}$ & $6.847\mathrm{e}{-2}$ \\
+$640$  & $7.023\mathrm{e}{-3}$ & $3.659\mathrm{e}{-2}$ \\
+$1280$ & $6.366\mathrm{e}{-3}$ & $3.474\mathrm{e}{-2}$ \\
+$2560$ & $5.932\mathrm{e}{-3}$ & $4.314\mathrm{e}{-2}$ \\
+$5120$ & $5.283\mathrm{e}{-3}$ & $3.851\mathrm{e}{-2}$ \\
+\hline
+\end{tabular}
+\end{minipage}
+
+\medskip
+\begin{minipage}[t]{0.54\textwidth}
+\caption{The optimal error $d_n(1/2)^2$ (blue) and the Möbius error
+$s_n(1/2)$ (red) on the critical line, \mbox{$2 \leq n \leq 5120$}, in log--log scale.}
+\label{fig:dn}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.42\textwidth}
+\captionof{table}{The same two errors at selected $n$; for $n \leq 1280$ the values
+of $d_n(1/2)^2$ are those of the exact Gram data.}
+\label{tab:dn}
+\end{minipage}
+\end{figure}
+
 Figure~\ref{fig:dn} contrasts the two sequences, and Table~\ref{tab:dn} records
 their values at selected $n$. While the M\"obius error $s_n(1/2)$ keeps oscillating
 between about $3 \cdot 10^{-2}$ and $3 \cdot 10^{-1}$, the optimal error
@@ -956,146 +960,109 @@ Saias~\cite{BBLS}, which is in turn bounded below by their $D(1/n)$. Hence, by
 \[
 \liminf_{n \to \infty} d_n(1/2)^2 \log n \ \geq\ 2 + \gamma - \log 4\pi = 0.0461\ldots
 \]
-unconditionally. In~\cite[\S8]{BBLS} the unconstrained distance was computed for
+unconditionally: if RH fails the bound is trivial, since then $d_n(1/2)$ does not tend
+to $0$, while under RH Burnol's bound $\sum_\rho m_\rho^2/|\rho|^2$, where $m_\rho$ is
+the multiplicity of the zero $\rho$, is at least
+$\sum_\rho m_\rho/|\rho|^2 = 2 + \gamma - \log 4\pi$. Being a bound on the $\liminf$,
+it is compatible with the values of $d_n(1/2)^2 \log n$ slightly below
+$2 + \gamma - \log 4\pi$ found above for finite $n$. In~\cite[\S8]{BBLS} the unconstrained distance was computed for
 $n \leq 10^4$ from Vasyunin's closed formulas for the inner
 products~\cite{vasyunin}, which led them to conjecture
 \cite[Conjecture~2]{BBLS} that $d_n^2 \sim (2 + \gamma - \log 4\pi)/\log n$. Our values,
-obtained by a different method (quadrature on the critical line), are consistent
-with these results: for $100 \leq n \leq 5120$, $d_n(1/2)^{-2}$ differs by at most
+obtained by a different method (the exact Gram data of Subsection~\ref{subsec:method}
+for $n \leq 1280$ and quadrature on the critical line beyond), are consistent with
+these results, although the unconstrained distance of~\cite{BBLS} does not exceed
+ours: for $100 \leq n \leq 5120$, $d_n(1/2)^{-2}$ differs by at most
 $5.1\%$ from the least-squares fit $21.99 \log n$ of~\cite[\S8]{BBLS}. This agreement also provides
 an independent check of the computation described in
 Subsection~\ref{subsec:method}.
 
-\begin{figure}[htb!]
-\centering
-% The graphic is saved first so that the table can be centred inside a box of
-% exactly the same height; the two captions then start on the same line.
-\sbox{\dnbox}{\includegraphics[width=0.52\textwidth]{fig_dn.pdf}}
-\begin{minipage}[t]{0.52\textwidth}
-\centering
-\vspace{0pt}
-\usebox{\dnbox}
-\caption{The optimal error $d_n(1/2)^2$ (blue) and the Möbius error
-$s_n(1/2)$ (red) on the critical line, $2 \leq n \leq 5120$, in log--log scale.}
-\label{fig:dn}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.44\textwidth}
-\centering
-\vspace{0pt}
-\sbox{\dntab}{\renewcommand{\arraystretch}{1.2}%
-\begin{tabular}{|r|c|c|}
-\hline
-$n$ & $d_n(1/2)^2$ & $s_n(1/2)$ \\
-\hline
-\hline
-$40$   & $1.274\mathrm{e}{-2}$ & $1.442\mathrm{e}{-1}$ \\
-$160$  & $9.357\mathrm{e}{-3}$ & $6.847\mathrm{e}{-2}$ \\
-$640$  & $7.023\mathrm{e}{-3}$ & $3.659\mathrm{e}{-2}$ \\
-$1280$ & $6.366\mathrm{e}{-3}$ & $3.474\mathrm{e}{-2}$ \\
-$2560$ & $5.932\mathrm{e}{-3}$ & $4.314\mathrm{e}{-2}$ \\
-$5120$ & $5.283\mathrm{e}{-3}$ & $3.851\mathrm{e}{-2}$ \\
-\hline
-\end{tabular}}%
-% Pad by exactly the slack, so the table drops to the foot of the panel
-% while the panel keeps the height of the graphic and the captions stay level.
-\parbox[c][\dimexpr\ht\dnbox+\dp\dnbox\relax][c]{\linewidth}{\centering
-\vspace*{\dimexpr\ht\dnbox+\dp\dnbox-\ht\dntab-\dp\dntab-\baselineskip\relax}
-\usebox{\dntab}}
-\captionof{table}{The same two errors at selected $n$; for $n \leq 1280$ the values
-of $d_n(1/2)^2$ are those of the exact Gram data.}
-\label{tab:dn}
-\end{minipage}
-\end{figure}
+% TODO (antes del envio): completar segun las normas de la revista elegida y
+% descomentar.
+% \section*{Declarations}
+% \paragraph{Funding.} ...
+% \paragraph{Competing interests.} ...
+% \paragraph{Data and code availability.} ...
 
-% \subsection{Concluding discussion}\label{subsec:discussion}
-
-% The three experiments are consistent: the cost of approximating $E$ by $S_n$
-% grows sharply, with a tolerance-dependent transition, as $\alpha \to 1/2$
-% (Subsection~\ref{subsec:tol}); near $\alpha = 1$, $s_n(\alpha)$ decays steadily,
-% supporting the persistence of Theorem~\ref{main-teo} into the strip
-% (Subsection~\ref{subsec:endpoints}); and on the critical line, the failure of
-% $S_n$ is attributable to the Möbius coefficients rather than the subspaces,
-% since $d_n(1/2)^2$ continues to decrease (Subsection~\ref{subsec:dn}).
-
-% We stress, finally, the conditional nature of this reading. By
-% Proposition~\ref{main-prop}, genuine convergence $S_n \to E$ for some
-% $1/2 \leq \alpha < 1$ would place $E$ in the closed span of
-% $\{G_k : k \geq 2\}$ and hence furnish a zero-free half-plane
-% $\mathbb{C}_\alpha$ deep within the critical strip, a conclusion lying far
-% beyond all currently known zero-free regions and widely regarded as being as
-% difficult as the Riemann Hypothesis itself. The evidence presented here is
-% therefore numerical and suggestive, not a proof.
+% Output all pending figures and tables before the references.
+\FloatBarrier
 
 \begin{thebibliography}{99}
-    \bibitem{apostol}
-    T. M. Apostol, Introduction to analytic number theory. UTM Springer, 1976.
-	
-	\bibitem{baez-beurling}
-	L. Báez-Duarte, On Beurling's real variable reformulation of the Riemann hypothesis, Adv. Math. 101 (1993), no. 1, 10--30.
 
-	\bibitem{baez}
-	L. Báez-Duarte, A strengthening of the Nyman-Beurling criterion for the Riemann hypothesis, Atti Acad. Naz. Lincei 14 (2003) 5-11.
+\bibitem{apostol}
+T. M. Apostol, Introduction to Analytic Number Theory, Undergraduate Texts in
+Mathematics, Springer, New York, 1976.
 
-    % \bibitem{BD_Arithmetical}
+\bibitem{baez-beurling}
+L. B\'aez-Duarte, On Beurling's real variable reformulation of the Riemann hypothesis,
+Adv. Math. 101 (1993) 10--30.
 
-    % L, Baez-Duarte. Arithmetical Aspects of Beurling's Real Variable Reformulation of the Riemann Hypothesis. arXiv preprint math/0011254 (2000).
-   \bibitem{baez-unitary}
-  L. Báez-Duarte, A class of invariant unitary operators, Adv. Math., 144, No. 1 (1999), 1-12.
+\bibitem{baez-unitary}
+L. B\'aez-Duarte, A class of invariant unitary operators, Adv. Math. 144 (1999) 1--12.
 
-    \bibitem{BBLS}
-    L. Báez-Duarte, M. Balazard, B. Landreau and E. Saias, Notes sur la fonction $\zeta$ de Riemann, 3, Adv. Math. 149 (2000) 130--144.
+\bibitem{baez}
+L. B\'aez-Duarte, A strengthening of the Nyman--Beurling criterion for the Riemann
+hypothesis, Atti Accad. Naz. Lincei Rend. Lincei Mat. Appl. 14 (2003) 5--11.
 
-    \bibitem{Balazard}
-    M. Balazard and E. Saias. Notes sur la fonction $\zeta$ de Riemann, 1. Adv. Math., Vol. 139 (1998) 310–321.
-    
-	
-	\bibitem{bagchi}
-	B. Bagchi, On Nyman, Beurling and Báez-Duarte's Hilbert space reformulation of the Riemann hypothesis, Proc. Indian Acad. Sci. Math. Sci. 116 (2) (2006) 137-146.
+\bibitem{BBLS}
+L. B\'aez-Duarte, M. Balazard, B. Landreau, E. Saias, Notes sur la fonction $\zeta$ de
+Riemann, 3, Adv. Math. 149 (2000) 130--144.
 
-    \bibitem{beurling}
-    A. Beurling, A closed problem related to the Riemann zeta-function. Proc. Nat. Acad. Sci., 41(5), 312-314, 1955.
+\bibitem{bagchi}
+B. Bagchi, On Nyman, Beurling and B\'aez-Duarte's Hilbert space reformulation of the
+Riemann hypothesis, Proc. Indian Acad. Sci. Math. Sci. 116 (2006) 137--146.
 
-    \bibitem{burnol}
-    J.-F. Burnol, A lower bound in an approximation problem involving the zeros of the Riemann zeta function, Adv. Math. 170 (2002) 56--70.
+\bibitem{Balazard}
+M. Balazard, E. Saias, Notes sur la fonction $\zeta$ de Riemann, 1, Adv. Math. 139
+(1998) 310--321.
 
-    \bibitem{noor-charles}
-    A. Ghosh, K. Kremnitzer, W. Noor, C. F. Santos, Zero-free half-planes of the $\zeta$-function via spaces of analytic functions, Adv. Math. 455 (2024) 109872.
-	
-	\bibitem{2}
-	H. Hedenmalm, P. Lindqvist, K. Seip, A Hilbert space of Dirichlet series and systems of dilated functions in $L^{2}(0,1)$, Duke Math. J. 86 (1997) 1-37. MR 99i:42033.
+\bibitem{beurling}
+A. Beurling, A closed problem related to the Riemann zeta-function, Proc. Natl. Acad.
+Sci. USA 41 (1955) 312--314.
 
-    \bibitem{manzur-noor-santos}
-    J. Manzur, S. W. Noor, and C. F. Santos. A weighted composition semigroup related to three open problems. J. Math. Anal. Appl. 525 (2023) 127261.
-	
-	
-	%\bibitem{3}
-	%N. Nikolski, In a shadow of the RH: cyclic vectors of the Hardy spaces on the Hilbert multidisc, Ann. Inst. Fourier 62 (5) (2012) 1601-1626.
-	
-	\bibitem{waleed1}
-	S. W. Noor, A Hardy space analysis of the Báez-Duarte criterion for the RH, Adv. Math. 350 (2019) 242-255.
+\bibitem{burnol}
+J.-F. Burnol, A lower bound in an approximation problem involving the zeros of the
+Riemann zeta function, Adv. Math. 170 (2002) 56--70.
 
-    \bibitem{Nyman}
-      B. Nyman, On some groups and semigroups of translations. Thesis, Uppsala, 1950.
+\bibitem{noor-charles}
+A. Ghosh, K. Kremnitzer, W. Noor, C. F. Santos, Zero-free half-planes of the
+$\zeta$-function via spaces of analytic functions, Adv. Math. 455 (2024) 109872.
 
-    \bibitem{platt}
-    D. Platt and T. Trudgian, The Riemann hypothesis is true up to $3 \cdot 10^{12}$, Bull. London Math. Soc. 53 (2021) 792-797.
+\bibitem{2}
+H. Hedenmalm, P. Lindqvist, K. Seip, A Hilbert space of Dirichlet series and systems
+of dilated functions in $L^{2}(0,1)$, Duke Math. J. 86 (1997) 1--37.
 
-    \bibitem{6}
-	H. Queffélec, K. Seip, Aproximation numbers of composition operators on the $H^{2}$ space of Dirichlet series, J. Funct. Anal. 268 (2015) 1612-1648.
+\bibitem{waleed1}
+S. W. Noor, A Hardy space analysis of the B\'aez-Duarte criterion for the RH, Adv.
+Math. 350 (2019) 242--255.
 
-    \bibitem{rudin}
-    W. Rudin, Real and Complex Analysis, 3rd ed., McGraw-Hill, New York, 1987.
+\bibitem{Nyman}
+B. Nyman, On some groups and semigroups of translations, Ph.D. thesis, University of
+Uppsala, 1950.
 
-    \bibitem{titchmarsh}
-    E. C. Titchmarsh, The Theory of the Riemann Zeta-Function, 2nd ed., revised by D. R. Heath-Brown, Oxford University Press, 1986.
+\bibitem{platt}
+D. Platt, T. Trudgian, The Riemann hypothesis is true up to $3 \cdot 10^{12}$, Bull.
+Lond. Math. Soc. 53 (2021) 792--797.
 
-    \bibitem{vasyunin}
-    V. I. Vasyunin, On a biorthogonal system related with the Riemann hypothesis, St. Petersburg Math. J. 7 (1996) 405--419.
+\bibitem{6}
+H. Queff\'elec, K. Seip, Approximation numbers of composition operators on the $H^{2}$
+space of Dirichlet series, J. Funct. Anal. 268 (2015) 1612--1648.
 
-      \bibitem{Weingartner}
-    A. Weingartner. On a question of Balazard and Saias related to the Riemann hypothesis. Adv. Math. Vol. 208  (2007) 905–908. 
-	
-	
+\bibitem{rudin}
+W. Rudin, Real and Complex Analysis, 3rd ed., McGraw-Hill, New York, 1987.
+
+\bibitem{titchmarsh}
+E. C. Titchmarsh, The Theory of the Riemann Zeta-Function, 2nd ed., revised by D. R.
+Heath-Brown, Oxford University Press, Oxford, 1986.
+
+\bibitem{vasyunin}
+V. I. Vasyunin, On a biorthogonal system related with the Riemann hypothesis, St.
+Petersburg Math. J. 7 (1996) 405--419.
+
+\bibitem{Weingartner}
+A. Weingartner, On a question of Balazard and Saias related to the Riemann hypothesis,
+Adv. Math. 208 (2007) 905--908.
+
 \end{thebibliography}
 
 
