@@ -1,17 +1,19 @@
-! Optimal error on the critical line (Subsection 4.3 of the paper) in Fortran:
+! Optimal error (Subsection 4.3 of the paper, alpha = 1/2) in Fortran:
 !
-!     d_n(1/2)^2 = min_c || E - sum_{k=2}^n c_k G_k ||^2_{1/2} = ||E||^2 - b^T A^{-1} b,
+!     d_n(alpha)^2 = min_c || E - sum_{k=2}^n c_k G_k ||^2_alpha = ||E||^2 - b^T A^{-1} b,
 !
 ! with A = (<G_j, G_k>)_{j,k=2}^{nmax} and b = (<E, G_k>)_{k=2}^{nmax}.  Since E and the
-! G_k are real on the real axis, <F, H> = (1/pi) int_0^inf Re[F(1/2+it) conj H(1/2+it)] dt.
+! G_k are real on the real axis, <F, H> = (1/pi) int_0^inf Re[F(a+it) conj H(a+it)] dt.
 ! These integrals are evaluated on a fixed grid (uniform step h_fine on [0, T_fine),
 ! n_geo geometric nodes on [T_fine, T_max], trapezoidal weights), with zeta(1/2+it)
 ! from the Euler-Maclaurin formula (zeta_em in riemann_lib.f90).
 !
 ! With A = U^T U (Cholesky) and y = U^{-T} b, the leading blocks give every n at once:
 !     d_n^2 = ||E||^2 - sum_{i=1}^{n-1} y_i^2,   2 <= n <= nmax.
-! The Moebius error s_n(1/2) = mu^T A mu - 2 mu^T b + ||E||^2 is also computed from the
-! same Gram data, as a check against riemann_traj.
+! The Moebius error s_n(alpha) = mu^T A mu - 2 mu^T b + ||E||^2 is also computed from the
+! same Gram data, as a check against riemann_traj.  Exact checks: ||E||^2 = 1/(2 alpha) and
+! <E, G_k> = G_k(2 alpha) (E is the reproducing kernel at 2 alpha), i.e. -log(k)/k for
+! alpha = 1/2 and (k^(-2 alpha) - 1/k) zeta(2 alpha)/(2 alpha) otherwise.
 !
 ! Usage:  ./riemann_dn [file.nml]     (namelist &params, e.g. riemann_dn.nml)
 
@@ -25,19 +27,20 @@ program riemann_dn
 
     ! ---- parameters (namelist &params); defaults reproduce the grid of the paper ----
     integer  :: nmax, n_geo, block, nthreads
-    real(dp) :: T_fine, h_fine, T_max
+    real(dp) :: alpha, T_fine, h_fine, T_max
     character(len=256) :: out_file, nml_file
-    namelist /params/ nmax, T_fine, h_fine, T_max, n_geo, block, nthreads, out_file
+    namelist /params/ alpha, nmax, T_fine, h_fine, T_max, n_geo, block, nthreads, out_file
 
     ! ---- work arrays ----
     real(dp), allocatable :: t(:), w(:), X(:,:), Y(:,:), A(:,:), b(:), y_(:), d2(:), sg(:)
     integer,  allocatable :: mu(:), spf(:)
     integer  :: nt, n1, nk, i, k, j0, j1, n, info, u, nfine, nok
     integer(int64) :: clock0, clock1, rate
-    real(dp) :: E2, om, lk, acc, ttotal
+    real(dp) :: E2, om, lk, acc, ttotal, z2a, bex
     complex(dp) :: s, z, psi, ek, gk
     character(len=:), allocatable :: line
 
+    alpha    = 0.5_dp
     nmax     = 5120
     T_fine   = 80.0_dp
     h_fine   = 0.01_dp
@@ -75,7 +78,7 @@ program riemann_dn
     !$omp parallel do schedule(dynamic, 16) private(s, z, psi, ek, gk, om, k, lk) &
     !$omp& reduction(+:E2, b)
     do i = 1, nt
-        s   = cmplx(0.5_dp, t(i), dp)
+        s   = cmplx(alpha, t(i), dp)
         z   = zeta_em(s)
         psi = z / s
         ek  = 1.0_dp / s
@@ -140,14 +143,23 @@ program riemann_dn
 
     ! ---- output: "n d_n^2 s_n" separated by one space ----
     open(newunit=u, file=trim(out_file), status="replace", action="write")
-    write(u, '(a)') "# d_n(1/2)^2 (optimal error) and s_n(1/2) (Moebius error) from the Gram matrix"
+    write(u, '(a,f6.3,a)') "# d_n(alpha)^2 (optimal error) and s_n(alpha) (Moebius error) from the &
+        &Gram matrix, alpha = ", alpha
     write(u, '(a,i0,a,es9.2,a,es9.2,a,i0,a,i0,a,f10.2,a)') "# nodes = ", nt, ", T_fine = ", &
         T_fine, ", T_max = ", T_max, ", nmax = ", nmax, ", stable up to n = ", nok + 1, &
         ", wall time = ", ttotal, " s"
-    write(u, '(a,es23.15)') "# ||E||^2 on the grid = ", E2
+    write(u, '(a,es23.15,a,es23.15)') "# ||E||^2 on the grid = ", E2, "   exact 1/(2 alpha) = ", &
+        0.5_dp / alpha
+    z2a = 0.0_dp
+    if (abs(alpha - 0.5_dp) > 1.0e-12_dp) z2a = real(zeta_em(cmplx(2.0_dp * alpha, 0.0_dp, dp)))
     do k = 2, nmax, max(1, (nmax - 2) / 6)
+        if (abs(alpha - 0.5_dp) <= 1.0e-12_dp) then
+            bex = -log(real(k, dp)) / real(k, dp)
+        else
+            bex = (real(k, dp)**(-2.0_dp * alpha) - 1.0_dp / real(k, dp)) * z2a / (2.0_dp * alpha)
+        end if
         write(u, '(a,i0,a,es23.15,a,es23.15)') "# <E,G_k> for k = ", k, ": ", b(k - 1), &
-            "   exact -log(k)/k = ", -log(real(k, dp)) / real(k, dp)
+            "   exact G_k(2 alpha) = ", bex
     end do
     write(u, '(a)') "# n d_n^2 s_n"
     do n = 2, nok + 1

@@ -1,0 +1,8 @@
+! Exact d_n(1/2)^2 and s_n(1/2) for n <= nmax from the Gram matrix of Proposition 4.1
+! (no zeta, no quadrature), to check dn_f90.txt.  Cost ~ nmax^4/10 operations.
+! Usage (from fotran/): ./riemann_gram_exact checks/riemann_gram_exact.nml  ->  checks/dn_exact.txt
+&params
+  nmax     = 1280,
+  nthreads = 4,
+  out_file = 'checks/dn_exact.txt'
+/

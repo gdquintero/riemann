@@ -83,119 +83,178 @@
 \maketitle
 
 \begin{abstract}
-
- Bagchi's Hilbert-space reformulation of the Báez-Duarte criterion \cite{baez} for the Riemann Hypothesis (RH) \cite{bagchi} states that RH holds if and only if $E(s)=1/s$ belongs to the closed linear span of $\{G_k : k\geq 2\}$, where $G_k(s)=(k^{-s}-k^{-1})\zeta(s)/s$, in the Hardy space $H^2(\C_{1/2})$; here $\C_\alpha$ denotes the half-plane $\mathrm{Re}(s)>\alpha$. We prove that $\sum_{k=2}^{\infty}\mu(k)G_k$ converges to $E$ in $H^2(\C_\alpha)$ for every $\alpha>1$; together with the fact that membership of $E$ in the span forces $\zeta$ to be zero-free in $\C_\alpha$, this gives an approximation-theoretic route recovering the classical non-vanishing of $\zeta$ on
-$\mathrm{Re}(s)>1$. A matching quantitative result shows that $\alpha_c := \inf\{\alpha\geq1/2 : d_n(\alpha)^2\to0\}$, the threshold at which the best $n$-term approximation of $E$ converges, equals $1/2$ if and only if RH holds. Motivated by this equivalence, we numerically study the Möbius error $s_n(\alpha) = \|\sum_{k=2}^n\mu(k)G_k - E\|^2_\alpha$ for $1/2\leq\alpha\leq1$, where $\|\cdot\|_\alpha$ denotes the norm of $H^2(\C_\alpha)$, and the optimal error $d_n(1/2)^2$ on the critical line. An exact formula expressing $s_n(\alpha)$ as a series with elementary terms, free of the zeta function, allows us to compute it up to $n = 10^6$: on the critical line $s_n(1/2)$ oscillates without decaying, consistent with its known divergence, while for every $\alpha > 1/2$ the oscillations decay at a rate close to $n^{1-2\alpha}$.
+By a theorem of Bagchi~\cite{bagchi}, the Riemann Hypothesis (RH) holds if and only if
+$E(s) = 1/s$ belongs to the closed linear span of
+$G_k(s) = (k^{-s} - k^{-1})\zeta(s)/s$, $k \geq 2$, in the Hardy space
+$H^2(\mathbb{C}_{1/2})$, where $\mathbb{C}_\alpha$ denotes the half-plane
+$\mathrm{Re}(s) > \alpha$. The formal M\"obius expansion
+$E = \sum_{k \geq 2} \mu(k) G_k$ is the Hardy-space counterpart of a series that
+B\'aez-Duarte~\cite{baez-unitary} proved to diverge in $L^2$, so its partial sums $S_n$ do not
+converge on the critical line. We study this expansion on the whole scale of spaces
+$H^2(\mathbb{C}_\alpha)$. We show that convergence of $S_n$ to $E$ in
+$H^2(\mathbb{C}_\alpha)$, and more generally membership of $E$ in the closed span of
+the $G_k$, forces $\zeta$ to be zero-free in $\mathbb{C}_\alpha$, and we prove that
+$S_n \to E$ in $H^2(\mathbb{C}_\alpha)$ for every $\alpha > 1$. Quantitatively, a
+single zero of $\zeta$ in $\mathbb{C}_\alpha$ keeps the error $d_n(\alpha)^2$ of
+best approximation of $E$ by $G_2, \dots, G_n$ uniformly away from zero; hence the
+threshold $\alpha_c$ beyond which $d_n(\alpha)^2 \to 0$ equals $1/2$ if and only if
+RH holds. To explore the critical strip, we express the M\"obius error
+$s_n(\alpha) = \|S_n - E\|^2_\alpha$ as a series with elementary terms, free of
+$\zeta$ and of numerical quadrature, and compute it for $n \leq 10^6$ and
+$1/2 \leq \alpha \leq 1$: on the critical line $s_n(1/2)$ oscillates without
+decaying, whereas for $\alpha > 1/2$ the oscillations decay at a rate close to
+$n^{1-2\alpha}$. Meanwhile, the optimal error $d_n(1/2)^2$ behaves like
+$0.046/\log n$ for $n \leq 5120$, in agreement with earlier computations by
+B\'aez-Duarte, Balazard, Landreau and Saias; since $d_n(1/2)^2 \to 0$ under RH while
+$s_n(1/2) \not\to 0$, under RH the obstruction on the critical line lies in the
+M\"obius coefficients rather than in the approximating subspaces.
 
 \bigskip
 \noindent
-\textbf{Keywords:} Riemann hypothesis, zero-free half-planes, B\'aez-Duarte criterion, Hardy spaces, numerical approximation.
-% \textbf{Keywords:} Riemann hypothesis, simulations, Nymann-Beurling.\\
+\textbf{Keywords:} Riemann hypothesis, Nyman--Beurling criterion, B\'aez-Duarte criterion, M\"obius function, zero-free half-planes, Hardy spaces, numerical approximation.
 
-% \noindent
-% \textbf{Mathematics Subject Classification:} 90C30, 65K05, 49M37, 90C60, 68Q25.\\
+\medskip
+\noindent
+\textbf{Mathematics Subject Classification:} 11M26, 30H10, 46E22, 11Y35.
 \end{abstract}
 
 
 
 \section{Introduction}
 
-The Riemann Hypothesis (RH) asserts that all non-trivial zeros of the Riemann 
-zeta function lie on the critical line $\mathrm{Re}(s) = \frac{1}{2}$. Its 
-implications for the distribution of prime numbers make it one of the central 
+The Riemann Hypothesis (RH) asserts that all non-trivial zeros of the Riemann
+zeta function lie on the critical line $\mathrm{Re}(s) = \frac{1}{2}$. Its
+implications for the distribution of prime numbers make it one of the central
 open problems in mathematics.
 
-A functional-analytic approach to RH was initiated by Nyman and Beurling, who 
-showed that RH is equivalent to the density of a specific family of functions 
-in $L^2(0,1)$~\cite{beurling,Nyman}. Báez-Duarte later refined this by 
-replacing the original uncountable family with a countable sequence, simplifying 
-the problem while preserving its essential structure~\cite{baez}. Balazard and
-Saias~\cite{Balazard} extended this approach to a weighted $\ell^2$-sequence space by posing the question of whether the orthogonal projection coefficients $c_{n,k}$ of $\mathbf{1}$ onto $\mathrm{span}\{r_k : 
-2 \leq k \leq n\}$ satisfy
-\[
-\lim_{n\to\infty} c_{n,k} = -\frac{\mu(k)}{k}, \quad \forall\, k \geq 2,
-\]
-where $\mu$ is the Möbius function and $r_k(j) = j \bmod k$ denotes the 
-remainder upon division of $j$ by $k$. This condition was shown by Weingartner in \cite{Weingartner} 
-to be equivalent to the RH, which identifies $-\mu(k)/k$ as the natural, and in a precise sense optimal, choice of coefficients.
+A functional-analytic approach to RH was initiated by Nyman and
+Beurling~\cite{beurling,Nyman}. Writing $\{y\}$ for the fractional part of $y$
+and $\chi = \chi_{(0,1]}$, their criterion states that RH holds if and only if
+$\chi$ can be approximated in $L^2(0,\infty)$ by linear combinations of the
+dilations $x \mapsto \{\theta/x\}$, $0 < \theta < 1$; see
+\cite[Theorem~1.1 and Remark~1.1]{baez-unitary} for this form.
+Báez-Duarte~\cite{baez-beurling,baez-unitary} examined the most natural candidate
+for such an approximation. M\"obius inversion of the identity
+$\lfloor 1/x \rfloor = \sum_{j \geq 1} \chi(jx)$ \cite[(2.4)]{baez-unitary} gives
+$\chi(x) = \sum_{j \geq 1} \mu(j) \lfloor 1/(jx) \rfloor$
+\cite[(2.6)]{baez-unitary}, where $\mu$ is the
+M\"obius function, and writing $\lfloor y \rfloor = y - \{y\}$ and using
+$\sum_{j} \mu(j)/j = 0$ one arrives at
+\begin{equation}\label{eq:bd-series}
+\chi(x) = -\sum_{j=1}^{\infty} \mu(j) \Bigl\{ \frac{1}{jx} \Bigr\}.
+\end{equation}
+This series converges pointwise and in $L^1(0,1)$~\cite[\S2.2]{baez-unitary}, but
+Báez-Duarte proved that it
+does not converge in $L^2(0,\infty)$~\cite[Theorem~2.2]{baez-unitary}: the
+M\"obius coefficients, natural as they are, fail precisely in the norm in which
+the criterion is formulated.
 
-A reformulation within the Hardy space $H^2(\mathbb{C}_{1/2})$ was established 
-by Bagchi~\cite{bagchi}, where $\mathbb{C}_\alpha = \{s \in \mathbb{C} : \mathrm{Re}(s) > \alpha\}$ 
-for $\alpha \in \mathbb{R}$: RH holds if and only if $E(s) = 1/s$ belongs to the 
+The same coefficients run through the subsequent literature. Báez-Duarte later
+strengthened the Nyman--Beurling criterion by replacing the uncountable family of
+dilations with the countable one $\{1/(kx)\}$, $k \geq 2$~\cite{baez}. In an
+equivalent weighted $\ell^2$-formulation, in which the constant sequence
+$\mathbf{1}$ is approximated by the remainder sequences $r_k(j) = j \bmod k$,
+Balazard and Saias~\cite{Balazard} asked whether the coefficients $c_{n,k}$ of the
+orthogonal projection of $\mathbf{1}$ onto
+$\mathrm{span}\{r_k : 2 \leq k \leq n\}$ satisfy
+$\lim_{n\to\infty} c_{n,k} = -\mu(k)/k$ for every $k \geq 2$, and
+Weingartner~\cite{Weingartner} proved that this is equivalent to RH. In the Hardy
+space $H^2(\mathbb{D})$ of the unit disk, Noor~\cite{waleed1} showed that RH holds
+if and only if the constant function $\mathbf{1}$ belongs to the closed linear
+span of
+\[
+h_k(z) = \frac{1}{1-z}\log\!\left(\frac{1+z+\cdots+z^{k-1}}{k}\right),
+\quad k \geq 2,
+\]
+and proved that $\sum_{k \geq 2} \frac{\mu(k)}{k}(I-S)h_k$ converges to $1-z$,
+where $S$ is the shift operator. For an overview of the many equivalent
+reformulations of the Nyman--Beurling and Báez-Duarte criteria, see
+\cite[pp.~5--6]{noor-charles}. Throughout, the M\"obius coefficients are the
+canonical candidates, and what is at stake is the norm in which convergence is
+measured.
+
+In this paper we pursue this question in the Hardy spaces of half-planes. For
+$\alpha \in \mathbb{R}$ let
+$\mathbb{C}_\alpha = \{s \in \mathbb{C} : \mathrm{Re}(s) > \alpha\}$. Bagchi
+\cite{bagchi} showed that RH holds if and only if $E(s) = 1/s$ belongs to the
 closed linear span of
 \[
 G_k(s) = \bigl(k^{-s} - k^{-1}\bigr)\frac{\zeta(s)}{s}, \quad k \geq 2,
 \]
-in $H^2(\mathbb{C}_{1/2})$. Building on these ideas, Noor introduced an 
-equivalent reformulation in the Hardy--Hilbert space $H^2(\mathbb{D})$ of the 
-unit disk~\cite{waleed1}: RH holds if and only if the constant function 
-$\mathbf{1}$ belongs to the closed linear span of
-\[
-h_k(z) = \frac{1}{1-z}\log\!\left(\frac{1+z+\cdots+z^{k-1}}{k}\right), \quad k \geq 2.
-\]
-In the same work, Noor established that the series $\sum_{k=2}^{\infty} 
-\frac{\mu(k)}{k}(I-S)h_k$ converges to $1-z$ in $H^2(\mathbb{D})$, where 
-$S$ is the shift operator. For an overview of the various equivalent reformulations of the Nyman-Beurling and Báez-Duarte approaches that appear in the literature, see \cite[p. 5-6]{noor-charles}.
+in $H^2(\mathbb{C}_{1/2})$. The Mellin transform carries $\chi$ to $E$ and
+$\{1/(kx)\} - \{1/x\}/k$ to $-G_k$ (see Subsection~\ref{subsec:method}), and under
+this correspondence~\eqref{eq:bd-series} becomes the formal identity
+\begin{equation}\label{eq:formal}
+E = \sum_{k=2}^{\infty} \mu(k)\, G_k ,
+\end{equation}
+which also follows formally from $\sum_{k} \mu(k) k^{-s} = 1/\zeta(s)$ and
+$\sum_{k} \mu(k)/k = 0$. By Plancherel's theorem the norm of
+$H^2(\mathbb{C}_{1/2})$ corresponds to the norm of $L^2(0,1)$, and Báez-Duarte's
+theorem shows that the partial sums $S_n = \sum_{k=2}^{n} \mu(k) G_k$ do not
+converge to $E$ in $H^2(\mathbb{C}_{1/2})$ (Remark~\ref{rem:exact}). The space
+$H^2(\mathbb{C}_{1/2})$, however, is only the first of the scale
+$H^2(\mathbb{C}_\alpha)$, and since $\|F\|_\alpha \leq \|F\|_{1/2}$ for
+$\alpha \geq 1/2$, where $\|\cdot\|_\alpha$ denotes the norm of
+$H^2(\mathbb{C}_\alpha)$, convergence becomes easier as $\alpha$ increases. This
+raises the question that motivates the present work: for which $\alpha$ does
+\eqref{eq:formal} converge in $H^2(\mathbb{C}_\alpha)$, and what does its
+convergence tell us about $\zeta$?
 
-The main idea of this paper is to generalize this 
-result in an attempt to approximate RH using the reformulation of Bagchi in 
-$H^2(\mathbb{C}_{1/2})$. To achieve this, we employ the Hilbert space of 
-Dirichlet series $\mathcal{H}^2$, which is naturally connected to 
-the Hardy space of the disk. Within this framework, we construct a bounded 
-operator $\mathcal{M}^\tau$ that establishes a connection between $\mathcal{H}^2$ 
-and the Hardy spaces $H^2(\mathbb{C}_\alpha)$, leading to our main result 
-(Theorem~\ref{main-teo}): the series $\sum_{k=2}^{\infty}\mu(k)G_k$ converges 
-to $E$ in $H^2(\mathbb{C}_\alpha)$ for every $\alpha > 1$. Furthermore, 
-Proposition~\ref{main-prop} establishes that for any $\alpha \geq 1/2$,
+Our first result ties convergence in a half-plane to the zeros of $\zeta$ in that
+half-plane. Proposition~\ref{main-prop} shows that, for every $\alpha \geq 1/2$,
 \[
 E \in \overline{\mathrm{span}}\{G_k : k \geq 2\} \ \text{in }
-H^2(\mathbb{C}_\alpha) \implies \zeta(s) \neq 0, \quad \forall\, s \in \mathbb{C}_\alpha.
+H^2(\mathbb{C}_\alpha) \implies \zeta(s) \neq 0, \quad \forall\, s \in \mathbb{C}_\alpha .
 \]
-
-A quantitative counterpart also holds. For $n \geq 2$ and $\alpha > 0$, let
+In particular, the convergence of the M\"obius series~\eqref{eq:formal} in
+$H^2(\mathbb{C}_\alpha)$ is a sufficient condition for the half-plane
+$\mathbb{C}_\alpha$ to be free of zeros, and Báez-Duarte's obstruction is the case
+$\alpha = 1/2$ of a whole scale of such conditions. We then prove
+(Theorem~\ref{main-teo}) that $S_n \to E$ in $H^2(\mathbb{C}_\alpha)$ for every
+$\alpha > 1$. The proof takes place in the Hilbert space $\mathcal{H}^2$ of
+Dirichlet series, where we extend Noor's convergence result to a family of
+functions $g_{k,\tau}$, and is transferred to $H^2(\mathbb{C}_\alpha)$ by a bounded
+operator $\mathcal{M}^\tau : \mathcal{H}^2 \to H^2(\mathbb{C}_{1/2+\tau})$. A
+quantitative counterpart also holds. For $n \geq 2$ and $\alpha > 0$ let
 \[
-d_n(\alpha)^2 := \inf_{c_2, \dots, c_n \in \mathbb{C}} \Bigl\| E - \sum_{k=2}^{n} c_k G_k \Bigr\|^2_\alpha
+d_n(\alpha)^2 := \inf_{c_2, \dots, c_n \in \mathbb{C}}
+\Bigl\| E - \sum_{k=2}^{n} c_k G_k \Bigr\|^2_\alpha
 \]
-denote the optimal approximation error over all coefficients. Theorem~\ref{thm:lower} shows that a
-single zero of $\zeta$ in $\mathbb{C}_\alpha$ forces $d_n(\alpha)^2$ to stay
-bounded away from $0$, uniformly in $n$. Combined with
-Proposition~\ref{main-prop}, this yields Corollary~\ref{cor:sensor}: writing
-$\Theta$ for the supremum of the real parts of the zeros of $\zeta$ and
-$\alpha_c = \inf\{\alpha \geq 1/2 : d_n(\alpha)^2 \to 0\}$, one has
-$1/2 \leq \Theta \leq \alpha_c \leq 1$, with $\alpha_c = 1/2$ if and only if RH
-holds. This recasts RH as a statement about the asymptotic behaviour of
-$d_n(\alpha)^2$, and is what motivates the numerical study of $d_n(1/2)^2$ in
-Subsection~\ref{subsec:dn}.
+denote the optimal approximation error. Theorem~\ref{thm:lower} shows that a single
+zero of $\zeta$ in $\mathbb{C}_\alpha$ keeps $d_n(\alpha)^2$ bounded away from $0$,
+uniformly in $n$, and Corollary~\ref{cor:sensor} shows that the threshold
+$\alpha_c = \inf\{\alpha \geq 1/2 : d_n(\alpha)^2 \to 0\}$ satisfies
+$1/2 \leq \Theta \leq \alpha_c \leq 1$, where $\Theta$ is the supremum of the real
+parts of the zeros of $\zeta$, with $\alpha_c = 1/2$ if and only if RH holds.
 
-An important question that arises is whether the convergence of the series
-extends to $1/2 \leq \alpha \leq 1$. Báez-Duarte~\cite{baez-unitary} showed
-that the $L^2(0,1)$-analog of the sequence $s_n(\alpha)$ defined below diverges, which implies the divergence of $s_n(1/2)$ itself
-in $H^2(\mathbb{C}_{1/2})$. Studying the convergence in the range
-$1/2 < \alpha \leq 1$ is therefore essential, as it could provide information
-about zero-free regions of $\zeta$ within the critical strip, a notoriously
-hard problem in its own right.
-
-The numerical analysis conducted in this work addresses two questions. The
-first is whether the convergence of the partial sums
+Between the critical line, where~\eqref{eq:formal} diverges, and the half-plane
+$\mathrm{Re}(s) > 1$, where it converges, lies the critical strip, and it is there
+that the question becomes decisive. By Proposition~\ref{main-prop}, a proof of
+convergence for some $\alpha < 1$ would yield a zero-free half-plane far beyond the
+known zero-free regions of $\zeta$, so we explore the strip numerically. An exact
+representation of the M\"obius error
 \[
-s_n(\alpha) = \left\|\sum_{k=2}^{n}\mu(k)G_k - E\right\|^2_\alpha
+s_n(\alpha) = \|S_n - E\|^2_\alpha
 \]
-persists beyond the range $\alpha > 1$ settled by Theorem~\ref{main-teo}. To study
-it we express $s_n(\alpha)$ exactly as a series with elementary terms
-(Proposition~\ref{prop:exact}), which avoids both the zeta function and numerical
-quadrature and allows us to compute $s_n(\alpha)$ up to $n = 10^6$ for
-$1/2 \leq \alpha \leq 1$. On the critical line $s_n(1/2)$ oscillates without
-decaying, consistent with the divergence result of Báez-Duarte, whereas for every
-$\alpha > 1/2$ the oscillations decay, at a rate close to $n^{1-2\alpha}$.
-The second question, guided by Corollary~\ref{cor:sensor}, is whether
-$d_n(1/2)^2$ itself tends to $0$: since $\alpha_c = 1/2$ is equivalent to RH,
-tracking $d_n(1/2)^2$ against $s_n(1/2)$ tests whether the failure at
-$\alpha = 1/2$ reflects a genuine obstruction in the subspaces
-$\mathrm{span}\{G_k : k \geq 2\}$, or only in the fixed choice of coefficients
-$\mu(k)$. The evidence points to the latter: $d_n(1/2)^2$ decreases steadily
-even as $s_n(1/2)$ oscillates. Section~2
-introduces the necessary function spaces and key results. Section~3 develops the main theoretical framework. Section~4
-presents the numerical experiments and their implications.
+as a series with elementary terms (Proposition~\ref{prop:exact}), which avoids both
+the zeta function and numerical quadrature, allows us to compute $s_n(\alpha)$ up to
+$n = 10^6$ for $1/2 \leq \alpha \leq 1$. On the critical line $s_n(1/2)$ oscillates
+without decaying, consistently with Báez-Duarte's theorem, which implies that
+$s_n(1/2) \not\to 0$ (Remark~\ref{rem:exact}). For every $\alpha > 1/2$, on the
+other hand, our computations show that the oscillations decay, at a rate close to
+$n^{1-2\alpha}$ over the computed range. Finally,
+in the spirit of Weingartner's theorem, we compare on the critical line the
+M\"obius error $s_n(1/2)$ with the optimal error $d_n(1/2)^2$, the distance from $E$
+to $\mathrm{span}\{G_2, \dots, G_n\}$. While $s_n(1/2)$ keeps oscillating,
+$d_n(1/2)^2$ behaves like $0.046/\log n$ over the computed range, in agreement with
+the computations of B\'aez-Duarte, Balazard, Landreau and Saias~\cite{BBLS}. Since
+$d_n(1/2)^2 \to 0$ under RH, whereas $s_n(1/2) \not\to 0$ unconditionally, under RH
+the failure at $\alpha = 1/2$ lies in the fixed choice of coefficients $\mu(k)$
+rather than in the subspaces themselves.
+
+Section~2 introduces the function spaces and the results needed later.
+Section~3 develops the theoretical framework and proves the results described
+above. Section~4 presents the numerical experiments and their implications.
 
 \section{Preliminaries}
 
@@ -591,7 +650,21 @@ $\mathbf{1}$ by the sequences $r_k/k$, $r_k(m) = m \bmod k$, in a weighted
 $\ell^2$-space; compare with the setting of Balazard and Saias~\cite{Balazard}
 recalled in the introduction. The proof also shows that
 $s_n(1/2) = \|f_n\|^2_{L^2(0,1)}$, which makes explicit the link with the
-$L^2(0,1)$ setting of B\'aez-Duarte.
+setting of B\'aez-Duarte. Indeed, put $\chi = \chi_{(0,1]}$,
+$M_1(n) = \sum_{k \leq n} \mu(k)/k$, and extend $f_n$ by $0$ to $(1,\infty)$.
+Since $\sum_{k=2}^{n} \mu(k)/k = M_1(n) - 1$, the definition of the $\rho_k$ gives
+\[
+f_n(x) = \chi(x) + \sum_{j=1}^{n} \mu(j) \Bigl\{ \frac{1}{jx} \Bigr\}
+- M_1(n) \Bigl\{ \frac{1}{x} \Bigr\}, \qquad x > 0,
+\]
+both sides vanishing for $x > 1$, where the right-hand side equals
+$M_1(n)/x - M_1(n)/x$. As $\{1/x\} \in L^2(0,\infty)$ and $M_1(n) \to 0$, the
+convergence $s_n(1/2) \to 0$ would force the partial sums of~\eqref{eq:bd-series} to
+converge to $\chi$ in $L^2(0,\infty)$, contradicting
+\cite[Theorem~2.2]{baez-unitary}. Hence $s_n(1/2) \not\to 0$; and since, by
+Theorem~\ref{main-teo}, any limit of $(S_n)$ in $H^2(\mathbb{C}_{1/2})$ would
+coincide with $E$ on $\mathbb{C}_1$, hence on $\mathbb{C}_{1/2}$, the sequence
+$(S_n)$ does not converge in $H^2(\mathbb{C}_{1/2})$.
 
 (ii) Since $\sum_{k \leq m} \mu(k) \lfloor m/k \rfloor = 1$ for every
 $m \geq 1$~\cite[Theorem~3.12]{apostol}, and $\lfloor m/k \rfloor = 0$ for $k > m$, for
@@ -608,8 +681,10 @@ s_n(\alpha) \geq M_1(n)^2 \sum_{m=1}^{n} m^2\, w_m(\alpha),
 \quad \Bigl(\tfrac12 \leq \alpha < 1\Bigr).
 \end{equation}
 Thus the decay of $s_n(\alpha)$ is limited from below by the size of the partial sums
-$M_1(n)$ of $\sum_k \mu(k)/k$. Under RH one has $M_1(n) = O(n^{-1/2+\varepsilon})$
-(cf.~\cite[Ch.~XIV]{titchmarsh}); if $M_1(n)$ is of exact order $n^{-1/2}$ along a
+$M_1(n)$ of $\sum_k \mu(k)/k$. Under RH one has $M_0(x)=\sum_{k\le x}\mu(k)=O(x^{1/2+\varepsilon})$
+\cite[Theorem~14.25(C)]{titchmarsh}; since $\sum_{k}\mu(k)/k=0$, partial
+summation gives $M_1(x)=M_0(x)/x-\int_x^\infty M_0(t)\,t^{-2}\,dt$, whence
+$M_1(n)=O(n^{-1/2+\varepsilon})$; if $M_1(n)$ is of exact order $n^{-1/2}$ along a
 sequence of values of $n$, the right-hand side of~\eqref{eq:lowerM1} is of order
 $n^{1-2\alpha}$ along that sequence.
 \end{remark}
@@ -627,13 +702,19 @@ centre $c$ of each block,
 which has relative error $O(h^3)$ and reduces the dependence on $\alpha$ to three
 moments of $R_n^2$ per block, shared by all values of $\alpha$. For $m > M$ we replace
 $R_n(m)^2$ by its mean value $\overline{R_n^2}$ over a period of $m \mapsto R_n(m)$, so
-that the tail contributes $\overline{R_n^2}\,(M+1)^{-2\alpha}/(2\alpha)$. This mean is
-known exactly: for $m$ uniformly distributed modulo $\mathrm{lcm}(j,k)$, the Chinese
-remainder theorem shows that the residues $m \bmod j$ and $m \bmod k$ are correlated
-only through $m \bmod \gcd(j,k)$, with
-covariance $(\gcd(j,k)^2 - 1)/12$, and writing
-$\gcd(j,k)^2 = \sum_{d \mid \gcd(j,k)} J_2(d)$, where $J_2$ is Jordan's totient, one
-finds
+that the tail contributes $\overline{R_n^2}\,(M+1)^{-2\alpha}/(2\alpha)$. This
+replacement is not exact, since the period $\mathrm{lcm}(2, \dots, n)$ of
+$m \mapsto R_n(m)$ is far larger than $M$; its effect is part of the truncation
+error estimated below. The mean itself is known exactly. Let $g = \gcd(j,k)$. For $m$ uniformly distributed
+modulo $\mathrm{lcm}(j,k)$, the Chinese remainder theorem gives
+$m \bmod j = ga + r$ and $m \bmod k = gb + r$, where $r = m \bmod g$,
+$a \in \{0, \dots, j/g - 1\}$ and $b \in \{0, \dots, k/g - 1\}$ are independent and
+uniformly distributed; hence the covariance of $m \bmod j$ and $m \bmod k$ equals
+the variance of $r$, namely $(g^2 - 1)/12$. Writing
+$\gcd(j,k)^2 = \sum_{d \mid \gcd(j,k)} J_2(d)$, where
+$J_2(d) = d^2 \prod_{p \mid d} (1 - p^{-2})$ is Jordan's totient, characterised by
+$\sum_{d \mid q} J_2(d) = q^2$ for $q \geq 1$ \cite[Ch.~2, Exercise~17]{apostol}
+(the term $d = 1$ cancels the $-1$), one finds
 \[
 \overline{R_n^2} = \Bigl(1 + \sum_{k=2}^{n} \mu(k)\,\frac{k-1}{2k}\Bigr)^2
 + \frac{1}{12} \sum_{d \geq 2} J_2(d) \Bigl(\sum_{\substack{2 \leq k \leq n \\ d \mid k}} \frac{\mu(k)}{k}\Bigr)^2 .
@@ -641,23 +722,38 @@ finds
 Since $R_n(m) = R_{n-1}(m) + \mu(n)\,(m \bmod n)/n$, passing from $n-1$ to $n$ costs a
 single pass over $m \leq M$, and only the $n$ with $\mu(n) \neq 0$ contribute. All the
 values $s_n(\alpha)$ with $n \leq N$ are therefore obtained with $O(NM)$ elementary
-operations, without evaluating $\zeta$ and without numerical quadrature. The
-computation was organised so that each block of values of $m$ stays in cache while it
+operations, without evaluating $\zeta$ and without numerical quadrature. Since all
+terms of~\eqref{eq:exact} are non-negative, no cancellation occurs when the series is
+summed. All computations are carried out in IEEE double precision, without
+compensated summation; two implementations of the recursion that accumulate $R_n(m)$
+in different orders agree to within $5 \cdot 10^{-9}$ (relative), far below the
+truncation error estimated below.
+The computation was organised so that each block of values of $m$ stays in cache while it
 runs through all $n$, the blocks being processed in parallel. A Fortran~2008 program
 with OpenMP computed $s_n(\alpha)$ for the $51$ values
-$\alpha = 0.50, 0.51, \dots, 1.00$ and $3001$ logarithmically spaced values of
-$n \in [10^3, 10^6]$ in $40$ minutes on the first machine described at the end of this
-subsection, with $m_0 = 10^4$, $h = 10^{-3}$ and $M = 3 \cdot 10^8$.
+$\alpha = 0.50, 0.51, \dots, 1.00$ and the $3001$ logarithmically spaced integers
+$n_j$, $0 \leq j \leq 3000$, where $n_j$ is the integer nearest to $10^{3 + j/1000}$
+(these integers are distinct, and $n_{3000} = 10^6$), in $40$ minutes on the machine
+described at the end of this subsection,
+with $m_0 = 10^4$, $h = 10^{-3}$ and $M = 3 \cdot 10^8$.
 The block expansion changes the results by less than $10^{-9}$ (relative) with respect
-to direct summation. Repeating the computation with $M = 10^8$ changes them by at most
-$3.5 \cdot 10^{-4}$, the largest differences occurring for $n$ close to $10^6$, and
-runs with $M = 10^7, 10^8, 10^9$ for $n \leq 10^5$ show that the truncation error
-decreases roughly like $M^{-1.8}$; we therefore estimate the relative error of the
-values reported below to be smaller than $10^{-4}$.
+to direct summation. To control the truncation error we repeated the whole
+computation with $M = 10^8$ and with $M = 10^9$. With respect to the run with
+$M = 10^9$, the values obtained with $M = 3 \cdot 10^8$ differ by at most $10^{-8}$
+for $n < 10^4$, $7.4 \cdot 10^{-7}$ for $10^4 \leq n < 10^5$ and $4.8 \cdot 10^{-5}$
+for $10^5 \leq n \leq 10^6$, while those obtained with $M = 10^8$ differ from the run
+with $M = 3 \cdot 10^8$ by up to $3.5 \cdot 10^{-4}$. These differences are consistent
+with a truncation error decreasing like $M^{-1.8}$, so that the relative error of the
+values reported below, computed with $M = 3 \cdot 10^8$, is about $5 \cdot 10^{-5}$ at
+most; the entries of Table~\ref{tab:envelope} change by at most $1.1 \cdot 10^{-5}$ when
+$M = 10^9$ is used instead.
 As an independent check, the values of $s_n(1/2)$ given by~\eqref{eq:exact} agree
 with those obtained from the Gram data described below, which are computed from the
 boundary integral and the zeta function, to within $3.4 \cdot 10^{-4}$ (relative) for
-$2 \leq n \leq 5120$, the median difference being $6 \cdot 10^{-5}$.
+$2 \leq n \leq 5120$, the median difference being $6 \cdot 10^{-5}$. The same check on
+the line $\mathrm{Re}(s) = 3/4$, with the Gram data computed there in the same way,
+gives agreement with~\eqref{eq:exact} to within $10^{-4}$ for $2 \leq n \leq 5120$, the
+median difference being $10^{-5}$.
 
 \paragraph{Optimal error.} The optimal error of Subsection~\ref{subsec:lower} is
 computed on the critical line as
@@ -681,15 +777,33 @@ precision. On this grid $\|E\|^2_{1/2} = 1$ is reproduced to $1.1 \cdot 10^{-7}$
 values of $\langle E, G_k \rangle_{1/2}$ agree to within $10^{-4}$ (relative) with the
 exact value $G_k(1) = -(\log k)/k$, which holds because $E$ is the reproducing kernel of
 $H^2(\mathbb{C}_{1/2})$ at $s = 1$, and the values of $s_n(1/2)$ computed from the Gram
-data agree with~\eqref{eq:exact} as stated above; we therefore estimate the relative
-error of $d_n(1/2)^2$ to be of order $10^{-4}$. The Gram matrix for $n = 5120$ is
+data agree with~\eqref{eq:exact} as stated above; these checks control the accuracy
+of the inner products. The Gram matrix for $n = 5120$ is
 factorised as $A = U^{\top} U$ (Cholesky), and with $y = U^{-\top} b$ the leading blocks
 of the factorisation give
 \[
 d_n(1/2)^2 = \|E\|^2_{1/2} - \sum_{i=1}^{n-1} y_i^2, \qquad 2 \leq n \leq 5120,
 \]
-for all $n$ at once. Although $A$ grows ill-conditioned with $n$, the factorisation
-remains numerically positive definite over the whole range.
+for all $n$ at once. Since $A$ is ill-conditioned, the accuracy of the inner
+products does not by itself bound the error of $d_n(1/2)^2$. We therefore also
+computed $d_n(1/2)^2$ for $n \leq 1280$ from the exact Gram data that follow from the
+proof of Proposition~\ref{prop:exact},
+\[
+\langle G_j, G_k \rangle_{1/2} = \frac{1}{jk} \sum_{m=1}^{\infty}
+\frac{(m \bmod j)(m \bmod k)}{m(m+1)},
+\qquad
+\langle E, G_k \rangle_{1/2} = -\frac{\log k}{k},
+\]
+where the series is summed exactly over one period $L = \mathrm{lcm}(j,k)$ by means of
+$\sum_{q \geq 0} \bigl((qL + r)(qL + r + 1)\bigr)^{-1} = \bigl(\psi((r+1)/L) - \psi(r/L)\bigr)/L$,
+$\psi$ being the digamma function; closed formulas for these inner products were
+obtained by Vasyunin~\cite{vasyunin}. The two computations of $d_n(1/2)^2$ agree to
+within $2 \cdot 10^{-4}$ (relative) for $n < 640$ and to within $5 \cdot 10^{-4}$ for
+$640 \leq n \leq 1280$, the difference growing slowly with $n$ as $A$ becomes more
+ill-conditioned; for larger $n$ the comparison with~\cite{BBLS} in
+Subsection~\ref{subsec:dn} provides a further check. The exact Gram data also give
+$s_n(1/2)$, which agrees with the implementation of~\eqref{eq:exact} described above to
+within $4 \cdot 10^{-8}$.
 
 \paragraph{Computing environment.}
 All the computations of this section were carried out with programs written in
@@ -703,6 +817,7 @@ the BLAS and LAPACK libraries. The computation of $d_n(1/2)^2$ for $2 \leq n \le
 took less than two minutes. The figures were produced with Python (Matplotlib) from the
 output of the Fortran programs. The code generating all figures and tables of this
 section is available from the authors upon request.
+% TODO (recomendado): sustituir por un repositorio publico (Zenodo/GitHub) con DOI.
 
 \subsection{The M\"obius error across the strip}\label{subsec:strip}
 
@@ -717,7 +832,8 @@ behaviour. We summarise each
 sequence instead by its largest and smallest values over each decade of $n$
 (Table~\ref{tab:envelope}), and measure its decay by the change of
 $\log_{10} \max s_n$ and $\log_{10} \min s_n$ per decade between the first and the last
-decade (Figure~\ref{fig:exponent}).
+decade (Figure~\ref{fig:exponent}). Since it is based on extreme values, this
+two-point estimate is only indicative.
 
 \begin{figure}[htb!]
 \centering
@@ -751,15 +867,16 @@ $10^3 \leq n \leq 10^6$, in log--log scale.}
 \end{tabular}
 \caption{Largest and smallest values of the M\"obius error $s_n(\alpha)$ over
 each decade of $n$, for $\alpha = 0.50, 0.55, \dots, 1.00$, computed at $3001$
-logarithmically spaced values of $n \in [10^3, 10^6]$.}
+logarithmically spaced values of $n \in [10^3, 10^6]$. The maxima and minima are
+taken over these sampled values of $n$.}
 \label{tab:envelope}
 \end{table}
 
 On the critical line the M\"obius error does not decay: over the three decades the
 maxima of $s_n(1/2)$ are $0.262$, $0.277$ and $0.253$, and the minima
-$3.18 \cdot 10^{-2}$, $3.41 \cdot 10^{-2}$ and $3.08 \cdot 10^{-2}$. This is the
-behaviour forced by the result of B\'aez-Duarte~\cite{baez-unitary}, by which
-$s_n(1/2) \not\to 0$. For every $\alpha > 1/2$, on the other hand, both the maxima and
+$3.18 \cdot 10^{-2}$, $3.41 \cdot 10^{-2}$ and $3.08 \cdot 10^{-2}$. This is
+consistent with the result of B\'aez-Duarte~\cite{baez-unitary}, by which
+$s_n(1/2) \not\to 0$ (Remark~\ref{rem:exact}). For every $\alpha > 1/2$, on the other hand, both the maxima and
 the minima decrease geometrically from one decade to the next, and
 Figure~\ref{fig:exponent} shows that the rate is very close to $10^{1-2\alpha}$ per
 decade: over the whole range the observed changes of $\log_{10}$ per decade differ from
@@ -774,7 +891,12 @@ so that for moderate $n$ the behaviour for $\alpha$ slightly above $1/2$ is hard
 apart from that on the critical line. The exponent $1 - 2\alpha$ is precisely the one
 given by the lower bound~\eqref{eq:lowerM1} when $M_1(n)$ is of order $n^{-1/2}$, and
 the largest peaks of $s_n(\alpha)$ in Figure~\ref{fig:sn} occur where $n M_1(n)^2$ is
-large.
+large. Near $\alpha = 1$ the maxima decay more slowly than $n^{1-2\alpha}$
+(Figure~\ref{fig:exponent}). This is consistent with~\eqref{eq:lowerM1}: for
+$\alpha = 1$ the sum $\sum_{m \leq n} m^2 w_m(1)$ grows like $\log n$, so that along
+a sequence with $M_1(n)$ of exact order $n^{-1/2}$ the lower bound is of order
+$n^{-1}\log n$, whose slope per decade over the computed range is about $-0.91$,
+close to the observed $-0.93$.
 
 \begin{figure}[htb!]
 \centering
@@ -799,7 +921,7 @@ floor would be smaller than $10^{-24}$.
 
 The critical line is the one place in the range studied where $S_n$ demonstrably
 fails: by B\'aez-Duarte~\cite{baez-unitary} the Möbius coefficients do not sum to
-$E$ at $\alpha = 1/2$, and the undamped oscillations of Figure~\ref{fig:sn}
+$E$ at $\alpha = 1/2$ (Remark~\ref{rem:exact}), and the undamped oscillations of Figure~\ref{fig:sn}
 are the price of this fixed choice. Since it is exactly at $\alpha = 1/2$ that
 Theorem~\ref{thm:bagchi} formulates the RH, the natural question is what this
 failure rules out. The answer is: nothing about the subspaces
@@ -813,14 +935,36 @@ coefficients from the picture by optimising over all of them. It is computed by
 the Gram matrix method of Subsection~\ref{subsec:method}.
 
 Figure~\ref{fig:dn} contrasts the two sequences, and Table~\ref{tab:dn} records
-their values at selected $n$. While the Möbius error $s_n(1/2)$ keeps oscillating
-between about $3 \cdot 10^{-2}$ and $3 \cdot 10^{-1}$, the optimal error $d_n^2$ decreases
-steadily, though very slowly, and satisfies $d_n^2 \leq s_n(1/2)$ throughout the
-computed range. The ``divergence'' on the critical line is therefore a statement
-about the coefficients rather than about the subspaces: the obstruction lies in the
-fixed choice $c_k = \mu(k)$, while the true distance from $E$ to
-$\mathrm{span}\{G_2, \dots, G_n\}$ continues to decrease over the range accessible
-to stable computation.
+their values at selected $n$. While the M\"obius error $s_n(1/2)$ keeps oscillating
+between about $3 \cdot 10^{-2}$ and $3 \cdot 10^{-1}$, the optimal error
+$d_n(1/2)^2$, which is non-increasing in $n$ by definition, decreases slowly:
+for $100 \leq n \leq 5120$, $d_n(1/2)^2 \log n$ stays between $0.044$ and $0.048$.
+Under RH, $d_n(1/2)^2 \to 0$ by Theorem~\ref{thm:bagchi}, whereas
+$s_n(1/2) \not\to 0$ unconditionally (Remark~\ref{rem:exact}); thus, under RH, the
+failure of $S_n$ on the critical line is due to the fixed choice $c_k = \mu(k)$
+and not to the subspaces $\mathrm{span}\{G_2, \dots, G_n\}$. Our computations
+illustrate this contrast; they cannot, of course, decide whether
+$d_n(1/2)^2 \to 0$ (see the end of Subsection~\ref{subsec:strip}).
+
+The distance $d_n(1/2)$ has been studied before in the Nyman--Beurling setting. By
+the proof of Proposition~\ref{prop:exact}, $d_n(1/2)$ is the distance in
+$L^2(0,\infty)$ from $\chi = \chi_{(0,1]}$ to the functions
+$\sum_{k=1}^{n} c_k \{1/(kx)\}$ with $\sum_{k} c_k/k = 0$. Dropping this constraint
+gives the distance studied by B\'aez-Duarte, Balazard, Landreau and
+Saias~\cite{BBLS}, which is in turn bounded below by their $D(1/n)$. Hence, by
+\cite[Th\'eor\`eme]{BBLS} as sharpened by Burnol~\cite[Theorem~1.3]{burnol},
+\[
+\liminf_{n \to \infty} d_n(1/2)^2 \log n \ \geq\ 2 + \gamma - \log 4\pi = 0.0461\ldots
+\]
+unconditionally. In~\cite[\S8]{BBLS} the unconstrained distance was computed for
+$n \leq 10^4$ from Vasyunin's closed formulas for the inner
+products~\cite{vasyunin}, which led them to conjecture
+\cite[Conjecture~2]{BBLS} that $d_n^2 \sim (2 + \gamma - \log 4\pi)/\log n$. Our values,
+obtained by a different method (quadrature on the critical line), are consistent
+with these results: for $100 \leq n \leq 5120$, $d_n(1/2)^{-2}$ differs by at most
+$5.1\%$ from the least-squares fit $21.99 \log n$ of~\cite[\S8]{BBLS}. This agreement also provides
+an independent check of the computation described in
+Subsection~\ref{subsec:method}.
 
 \begin{figure}[htb!]
 \centering
@@ -845,9 +989,9 @@ $n$ & $d_n(1/2)^2$ & $s_n(1/2)$ \\
 \hline
 \hline
 $40$   & $1.274\mathrm{e}{-2}$ & $1.442\mathrm{e}{-1}$ \\
-$160$  & $9.356\mathrm{e}{-3}$ & $6.847\mathrm{e}{-2}$ \\
-$640$  & $7.022\mathrm{e}{-3}$ & $3.659\mathrm{e}{-2}$ \\
-$1280$ & $6.363\mathrm{e}{-3}$ & $3.474\mathrm{e}{-2}$ \\
+$160$  & $9.357\mathrm{e}{-3}$ & $6.847\mathrm{e}{-2}$ \\
+$640$  & $7.023\mathrm{e}{-3}$ & $3.659\mathrm{e}{-2}$ \\
+$1280$ & $6.366\mathrm{e}{-3}$ & $3.474\mathrm{e}{-2}$ \\
 $2560$ & $5.932\mathrm{e}{-3}$ & $4.314\mathrm{e}{-2}$ \\
 $5120$ & $5.283\mathrm{e}{-3}$ & $3.851\mathrm{e}{-2}$ \\
 \hline
@@ -857,8 +1001,8 @@ $5120$ & $5.283\mathrm{e}{-3}$ & $3.851\mathrm{e}{-2}$ \\
 \parbox[c][\dimexpr\ht\dnbox+\dp\dnbox\relax][c]{\linewidth}{\centering
 \vspace*{\dimexpr\ht\dnbox+\dp\dnbox-\ht\dntab-\dp\dntab-\baselineskip\relax}
 \usebox{\dntab}}
-\captionof{table}{The same two errors at selected $n$; in every case
-$d_n^2 \leq s_n(1/2)$.}
+\captionof{table}{The same two errors at selected $n$; for $n \leq 1280$ the values
+of $d_n(1/2)^2$ are those of the exact Gram data.}
 \label{tab:dn}
 \end{minipage}
 \end{figure}
@@ -886,6 +1030,9 @@ $d_n^2 \leq s_n(1/2)$.}
     \bibitem{apostol}
     T. M. Apostol, Introduction to analytic number theory. UTM Springer, 1976.
 	
+	\bibitem{baez-beurling}
+	L. Báez-Duarte, On Beurling's real variable reformulation of the Riemann hypothesis, Adv. Math. 101 (1993), no. 1, 10--30.
+
 	\bibitem{baez}
 	L. Báez-Duarte, A strengthening of the Nyman-Beurling criterion for the Riemann hypothesis, Atti Acad. Naz. Lincei 14 (2003) 5-11.
 
@@ -894,6 +1041,9 @@ $d_n^2 \leq s_n(1/2)$.}
     % L, Baez-Duarte. Arithmetical Aspects of Beurling's Real Variable Reformulation of the Riemann Hypothesis. arXiv preprint math/0011254 (2000).
    \bibitem{baez-unitary}
   L. Báez-Duarte, A class of invariant unitary operators, Adv. Math., 144, No. 1 (1999), 1-12.
+
+    \bibitem{BBLS}
+    L. Báez-Duarte, M. Balazard, B. Landreau and E. Saias, Notes sur la fonction $\zeta$ de Riemann, 3, Adv. Math. 149 (2000) 130--144.
 
     \bibitem{Balazard}
     M. Balazard and E. Saias. Notes sur la fonction $\zeta$ de Riemann, 1. Adv. Math., Vol. 139 (1998) 310–321.
@@ -904,6 +1054,9 @@ $d_n^2 \leq s_n(1/2)$.}
 
     \bibitem{beurling}
     A. Beurling, A closed problem related to the Riemann zeta-function. Proc. Nat. Acad. Sci., 41(5), 312-314, 1955.
+
+    \bibitem{burnol}
+    J.-F. Burnol, A lower bound in an approximation problem involving the zeros of the Riemann zeta function, Adv. Math. 170 (2002) 56--70.
 
     \bibitem{noor-charles}
     A. Ghosh, K. Kremnitzer, W. Noor, C. F. Santos, Zero-free half-planes of the $\zeta$-function via spaces of analytic functions, Adv. Math. 455 (2024) 109872.
@@ -935,6 +1088,9 @@ $d_n^2 \leq s_n(1/2)$.}
 
     \bibitem{titchmarsh}
     E. C. Titchmarsh, The Theory of the Riemann Zeta-Function, 2nd ed., revised by D. R. Heath-Brown, Oxford University Press, 1986.
+
+    \bibitem{vasyunin}
+    V. I. Vasyunin, On a biorthogonal system related with the Riemann hypothesis, St. Petersburg Math. J. 7 (1996) 405--419.
 
       \bibitem{Weingartner}
     A. Weingartner. On a question of Balazard and Saias related to the Riemann hypothesis. Adv. Math. Vol. 208  (2007) 905–908. 

@@ -17,7 +17,7 @@ module riemann_lib
     implicit none
     private
     public :: dp, pi, pow_diff, sieve, squarefree_divisors, geometric_blocks, weights, &
-              tail_mean, zeta_em, num, inum
+              tail_mean, zeta_em, digamma, num, inum
 
     real(dp), parameter :: pi = 3.14159265358979323846264338327950288_dp
 
@@ -216,6 +216,24 @@ contains
             corr = corr / (rN * rN)
         end do
     end function zeta_em
+
+    ! Digamma function for x > 0: psi(x) = psi(x+j) - sum_{i<j} 1/(x+i) with x+j >= 10,
+    ! then the asymptotic series up to y^(-14) (remainder below 1e-16 for y >= 10)
+    elemental real(dp) function digamma(x) result(p)
+        real(dp), intent(in) :: x
+
+        real(dp) :: y, y2, acc
+
+        y   = x
+        acc = 0.0_dp
+        do while (y < 10.0_dp)
+            acc = acc - 1.0_dp / y
+            y   = y + 1.0_dp
+        end do
+        y2 = 1.0_dp / (y * y)
+        p  = acc + log(y) - 0.5_dp / y - y2 * (1.0_dp/12 - y2 * (1.0_dp/120 - y2 * (1.0_dp/252 &
+             - y2 * (1.0_dp/240 - y2 * (1.0_dp/132 - y2 * (691.0_dp/32760 - y2 / 12.0_dp))))))
+    end function digamma
 
     ! Text of x in format f without surrounding blanks
     function num(x, f) result(str)

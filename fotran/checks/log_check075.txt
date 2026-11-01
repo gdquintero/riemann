@@ -1,0 +1,2 @@
+done: 1 alphas x 5119 values of n in      26.27 s  ->  checks/traj_sn075/
+done: n <= 5120, ||E||^2 = 0.666667, wall time     303.73 s  ->  checks/dn_075.txt

@@ -1,0 +1,2 @@
+done: 51 alphas x 3001 values of n in    7590.70 s  ->  checks/traj_1e6_M1e9/
+max RSS 2748528 kB, 7591.00 s

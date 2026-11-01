@@ -3,3 +3,4 @@ riemann_traj
 *.mod
 *.o
 riemann_dn
+riemann_gram_exact

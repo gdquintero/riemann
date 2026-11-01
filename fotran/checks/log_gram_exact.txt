@@ -1,0 +1,2 @@
+done: n <= 1280, b check  4.22E-15, wall time    1417.69 s  ->  checks/dn_exact.txt
+1417.70 s

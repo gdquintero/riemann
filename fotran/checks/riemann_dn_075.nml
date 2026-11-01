@@ -1,0 +1,14 @@
+! Check of Proposition 4.1 for alpha > 1/2: s_n(0.75) from the Gram matrix on Re(s) = 0.75
+! (quadrature + Euler-Maclaurin zeta), to be compared with checks/traj_sn075 (exact).
+! Usage (from fotran/): ./riemann_dn checks/riemann_dn_075.nml  ->  checks/dn_075.txt
+&params
+  alpha    = 0.75,
+  nmax     = 5120,
+  T_fine   = 80.0,
+  h_fine   = 0.01,
+  T_max    = 3.0e6,
+  n_geo    = 25600,
+  block    = 128,
+  nthreads = 4,
+  out_file = 'checks/dn_075.txt'
+/
