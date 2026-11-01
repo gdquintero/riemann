@@ -36,6 +36,7 @@
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
 
 
@@ -61,20 +62,22 @@ $H^2(\mathbb{C}_{1/2})$, where $\mathbb{C}_\alpha$ denotes the half-plane
 $\mathrm{Re}(s) > \alpha$. The formal M\"obius expansion
 $E = \sum_{k \geq 2} \mu(k) G_k$ corresponds to a series that B\'aez-Duarte proved
 to diverge in $L^2$, so its partial sums $S_n$ do not converge on the critical line.
-We study this expansion in the scale of spaces $H^2(\mathbb{C}_\alpha)$. We show that
-membership of $E$ in the closed span of the $G_k$ in $H^2(\mathbb{C}_\alpha)$ forces
-$\zeta$ to be zero-free in $\mathbb{C}_\alpha$, that $S_n \to E$ in
-$H^2(\mathbb{C}_\alpha)$ for every $\alpha > 1$, and that a single zero of $\zeta$ in
-$\mathbb{C}_\alpha$ keeps the best-approximation error $d_n(\alpha)^2$ away from zero;
-hence the threshold beyond which $d_n(\alpha)^2 \to 0$ equals $1/2$ if and only if RH
-holds. We express the M\"obius error $s_n(\alpha) = \|S_n - E\|^2_\alpha$ as a series
-with elementary terms, free of $\zeta$, and compute it for $n \leq 10^6$ and
-$1/2 \leq \alpha \leq 1$: $s_n(1/2)$ oscillates without decaying, whereas for
-$\alpha > 1/2$ the oscillations decay at a rate close to $n^{1-2\alpha}$. On the
-critical line the optimal error $d_n(1/2)^2$ behaves like $0.046/\log n$ for
+We study this expansion in the scale of spaces $H^2(\mathbb{C}_\alpha)$, where its
+convergence forces $\zeta$ to be zero-free in $\mathbb{C}_\alpha$. We prove that
+$S_n \to E$ in $H^2(\mathbb{C}_\alpha)$ for every $\alpha > 1$, by transferring a
+convergence result of Noor from the Hardy space of the disk to the half-planes, and
+that a single zero of $\zeta$ in $\mathbb{C}_\alpha$ keeps the error
+$d_n(\alpha)^2$ of best approximation of $E$ by $G_2, \dots, G_n$ uniformly away from
+zero. For $1/2 \leq \alpha \leq 1$ we express the M\"obius error
+$s_n(\alpha) = \|S_n - E\|^2_\alpha$, where $\|\cdot\|_\alpha$ is the norm of
+$H^2(\mathbb{C}_\alpha)$, as a series with elementary terms, free of $\zeta$, and
+compute it for $n \leq 10^6$: $s_n(1/2)$ oscillates without decaying, whereas for
+$\alpha > 1/2$ the oscillations decay at a rate close to $n^{1-2\alpha}$, much faster
+than the bound $O(n^{-(\alpha-1/2)/3})$ that follows under RH from estimates of
+Balazard and Saias. On the critical line, $d_n(1/2)^2$ behaves like $0.046/\log n$ for
 $100 \leq n \leq 5120$, in agreement with earlier computations by B\'aez-Duarte,
-Balazard, Landreau and Saias; under RH, the obstruction on the critical line thus lies
-in the M\"obius coefficients rather than in the approximating subspaces.
+Balazard, Landreau and Saias; under RH, the obstruction there thus lies in the
+M\"obius coefficients rather than in the approximating subspaces.
 
 \bigskip
 \noindent
@@ -118,7 +121,8 @@ the criterion is formulated.
 
 The same coefficients run through the subsequent literature. Báez-Duarte later
 strengthened the Nyman--Beurling criterion by replacing the uncountable family of
-dilations with the countable one $\{1/(kx)\}$, $k \geq 2$~\cite{baez}. In an
+dilations with the countable family $x \mapsto \{1/(kx)\} - \{1/x\}/k$,
+$k \geq 2$~\cite{baez}. In an
 equivalent weighted $\ell^2$-formulation, in which the constant sequence
 $\mathbf{1}$ is approximated by the remainder sequences $r_k(j) = j \bmod k$,
 Balazard and Saias~\cite{Balazard} asked whether the coefficients $c_{n,k}$ of the
@@ -134,9 +138,13 @@ h_k(z) = \frac{1}{1-z}\log\!\left(\frac{1+z+\cdots+z^{k-1}}{k}\right),
 \quad k \geq 2,
 \]
 and proved that $\sum_{k \geq 2} \frac{\mu(k)}{k}(I-S)h_k$ converges to $1-z$,
-where $S$ is the shift operator. For an overview of the many equivalent
-reformulations of the Nyman--Beurling and Báez-Duarte criteria, see
-\cite[pp.~5--6]{noor-charles}. Throughout, the M\"obius coefficients are the
+where $S$ is the shift operator. Ghosh, Kremnizer, Noor and
+Santos~\cite{noor-charles} developed a general approach in which the density of
+$\mathrm{span}\{h_k\}$ in suitable spaces of analytic functions yields zero-free
+half-planes, and showed in particular that a M\"obius series in the $h_k$ converges
+in $H^q(\mathbb{D})$, $0 < q < 1$, which gives the half-plane $\mathrm{Re}(s) > 1$;
+see also~\cite[pp.~5--6]{noor-charles} for an overview of the many equivalent
+reformulations of the Nyman--Beurling and B\'aez-Duarte criteria. Throughout, the M\"obius coefficients are the
 canonical candidates, and what is at stake is the norm in which convergence is
 measured.
 
@@ -167,8 +175,9 @@ raises the question that motivates the present work: for which $\alpha$ does
 \eqref{eq:formal} converge in $H^2(\mathbb{C}_\alpha)$, and what does its
 convergence tell us about $\zeta$?
 
-Our first result ties convergence in a half-plane to the zeros of $\zeta$ in that
-half-plane. Proposition~\ref{main-prop} shows that, for every $\alpha \geq 1/2$,
+The starting point is the following simple observation, which ties convergence in
+a half-plane to the zeros of $\zeta$ in that half-plane
+(Proposition~\ref{main-prop}): for every $\alpha \geq 1/2$,
 \[
 E \in \overline{\mathrm{span}}\{G_k : k \geq 2\} \ \text{in }
 H^2(\mathbb{C}_\alpha) \implies \zeta(s) \neq 0, \quad \forall\, s \in \mathbb{C}_\alpha .
@@ -178,10 +187,12 @@ $H^2(\mathbb{C}_\alpha)$ is a sufficient condition for the half-plane
 $\mathbb{C}_\alpha$ to be free of zeros, and Báez-Duarte's obstruction is the case
 $\alpha = 1/2$ of a whole scale of such conditions. We then prove
 (Theorem~\ref{main-teo}) that $S_n \to E$ in $H^2(\mathbb{C}_\alpha)$ for every
-$\alpha > 1$. The proof takes place in the Hilbert space $\mathcal{H}^2$ of
-Dirichlet series, where we extend Noor's convergence result to a family of
-functions $g_{k,\tau}$, and is transferred to $H^2(\mathbb{C}_\alpha)$ by a bounded
-operator $\mathcal{M}^\tau : \mathcal{H}^2 \to H^2(\mathbb{C}_{1/2+\tau})$. A
+$\alpha > 1$; in the scale $H^2(\mathbb{C}_\alpha)$ this is the counterpart of the
+result of~\cite{noor-charles} for $H^q(\mathbb{D})$. The proof extends Noor's
+convergence result to a family of functions $g_{k,\tau}$ in $H^2(\mathbb{D})$ and
+transfers it, through the Hilbert space $\mathcal{H}^2$ of Dirichlet series, to
+$H^2(\mathbb{C}_\alpha)$ by a bounded operator
+$\mathcal{M}^\tau : \mathcal{H}^2 \to H^2(\mathbb{C}_{1/2+\tau})$. A
 quantitative counterpart also holds. For $n \geq 2$ and $\alpha > 0$ let
 \[
 d_n(\alpha)^2 := \inf_{c_2, \dots, c_n \in \mathbb{C}}
@@ -192,7 +203,7 @@ zero of $\zeta$ in $\mathbb{C}_\alpha$ keeps $d_n(\alpha)^2$ bounded away from $
 uniformly in $n$, and Corollary~\ref{cor:sensor} shows that the threshold
 $\alpha_c = \inf\{\alpha \geq 1/2 : d_n(\alpha)^2 \to 0\}$ satisfies
 $1/2 \leq \Theta \leq \alpha_c \leq 1$, where $\Theta$ is the supremum of the real
-parts of the zeros of $\zeta$, with $\alpha_c = 1/2$ if and only if RH holds.
+parts of the non-trivial zeros of $\zeta$, with $\alpha_c = 1/2$ if and only if RH holds.
 
 Between the critical line, where~\eqref{eq:formal} diverges, and the half-plane
 $\mathrm{Re}(s) > 1$, where it converges, lies the critical strip, and it is there
@@ -209,15 +220,32 @@ $n = 10^6$ for $1/2 \leq \alpha \leq 1$. On the critical line $s_n(1/2)$ oscilla
 without decaying, consistently with Báez-Duarte's theorem, which implies that
 $s_n(1/2) \not\to 0$ (Remark~\ref{rem:exact}). For every $\alpha > 1/2$, on the
 other hand, our computations show that the oscillations decay, at a rate close to
-$n^{1-2\alpha}$ over the computed range. Finally,
-in the spirit of Weingartner's theorem, we compare on the critical line the
+$n^{1-2\alpha}$ over the computed range. Under RH, the convergence
+$s_n(\alpha) \to 0$ for $\alpha > 1/2$ follows from the estimates of Balazard and
+Saias~\cite[Lemmes~4 et~5]{Balazard}, but only with a bound of order
+$n^{-(\alpha-1/2)/3}$; the computations thus indicate a much faster decay, matching
+the order of the lower bound in Remark~\ref{rem:exact}(ii). Finally,
+in the spirit of Weingartner's theorem, which compares the optimal coefficients
+with the M\"obius ones in the $\ell^2$-setting recalled above, we compare on the
+critical line the
 M\"obius error $s_n(1/2)$ with the optimal error $d_n(1/2)^2$, the distance from $E$
 to $\mathrm{span}\{G_2, \dots, G_n\}$. While $s_n(1/2)$ keeps oscillating,
 $d_n(1/2)^2$ behaves like $0.046/\log n$ for $100 \leq n \leq 5120$, in agreement with
 the computations of B\'aez-Duarte, Balazard, Landreau and Saias~\cite{BBLS}. Since
 $d_n(1/2)^2 \to 0$ under RH, whereas $s_n(1/2) \not\to 0$ unconditionally, under RH
 the failure at $\alpha = 1/2$ lies in the fixed choice of coefficients $\mu(k)$
-rather than in the subspaces themselves.
+rather than in the subspaces themselves. This is in line with the work of Bettin,
+Conrey and Farmer~\cite{BCF}, who showed, in the closely related setting
+of~\cite{BBLS}, that under RH and a hypothesis on $\sum_\rho |\zeta'(\rho)|^{-2}$ the
+smoothed M\"obius coefficients $\mu(k)(1 - \log k/\log n)$ attain the conjectured
+optimal rate $(2 + \gamma - \log 4\pi)/\log n$.
+
+The main contributions of the paper are thus: the convergence of the M\"obius
+expansion in $H^2(\mathbb{C}_\alpha)$ for every $\alpha > 1$, obtained by an
+operator-theoretic transfer of Noor's convergence result; an exact representation
+of the M\"obius error, free of $\zeta$, valid for every $\alpha > 0$; and numerical
+evidence, up to $n = 10^6$, that for $\alpha > 1/2$ this error decays like
+$n^{1-2\alpha}$, much faster than the known conditional bound.
 
 Section~\ref{sec:prelim} introduces the function spaces and the results needed
 later. Section~\ref{sec:approx} develops the theoretical framework and proves the
@@ -331,7 +359,7 @@ and
 = (1-k^{1-s})\frac{\zeta(s)}{s} = -kG_k(s).
 \]
 
-\subsection{Zero-free region of $\zeta$ in $\mathbb{C}_\alpha$}
+\subsection{Convergence in $H^2(\mathbb{C}_\alpha)$ for $\alpha > 1$}
 
 We now establish one of the main results of the paper. The key step is the following 
 generalization of Lemma~\ref{lem1:waleed} to the family $\{g_{k,\tau}\}$.
@@ -384,7 +412,7 @@ Since $\sigma_0(j) = o(j^\epsilon)$ for every $\epsilon > 0$, choosing $\epsilon
 such that $\tau > 1/2 + \epsilon$ yields, for some constant $C_\epsilon > 0$,
 \[
 \|\phi_n\|^2_{H^2_0} \leq C_\epsilon \sum_{j=n+1}^{\infty} \frac{j^{2\epsilon}}{j^{2\tau}} 
-= \sum_{j=n+1}^{\infty} \frac{1}{j^{2\tau - 2\epsilon}} \longrightarrow 0,
+= C_\epsilon \sum_{j=n+1}^{\infty} \frac{1}{j^{2\tau - 2\epsilon}} \longrightarrow 0,
 \]
 since $2\tau - 2\epsilon > 1$.
 \end{proof}
@@ -523,8 +551,10 @@ Combined with $\Theta\ge\tfrac12$, this gives $\alpha_c=\tfrac12$.
 
 \section{Numerical experiments}\label{sec:numerics}
 
-The range $1/2 \leq \alpha \leq 1$ left open by Theorem~\ref{main-teo} lies beyond
-the reach of our analytical methods; this section probes it numerically. Two
+The range $1/2 \leq \alpha \leq 1$ is not covered by Theorem~\ref{main-teo}; under
+RH, convergence there follows from the estimates of Balazard and
+Saias~\cite{Balazard} (see the end of Subsection~\ref{subsec:strip}), but only with a
+weak bound. This section probes this range numerically. Two
 questions guide the experiments: how the M\"obius error
 $s_n(\alpha) = \|S_n - E\|^2_\alpha$ behaves as $n \to \infty$ across the strip, and
 whether the obstruction on the critical line traced by Corollary~\ref{cor:sensor} is
@@ -782,7 +812,6 @@ the BLAS and LAPACK libraries. The computation of $d_n(1/2)^2$ for $2 \leq n \le
 took less than two minutes. The figures were produced with Python (Matplotlib) from the
 output of the Fortran programs. The code generating all figures and tables of this
 section is available from the authors upon request.
-% TODO (recomendado): sustituir por un repositorio publico (Zenodo/GitHub) con DOI.
 
 \subsection{The M\"obius error across the strip}\label{subsec:strip}
 
@@ -847,9 +876,9 @@ Figure~\ref{fig:exponent} shows that the rate is very close to $10^{1-2\alpha}$ 
 decade: over the whole range the observed changes of $\log_{10}$ per decade differ from
 $1 - 2\alpha$ by less than $0.08$. The data are thus consistent with
 \[
-s_n(\alpha) \asymp n^{1-2\alpha}, \qquad \tfrac12 \leq \alpha \leq 1,
+s_n(\alpha) \asymp n^{1-2\alpha}, \qquad \tfrac12 \leq \alpha < 1,
 \]
-for the envelope of the oscillations, and in particular with $s_n(\alpha) \to 0$ for
+for the envelope of the oscillations (for $\alpha = 1$ see below), and in particular with $s_n(\alpha) \to 0$ for
 every $\alpha > 1/2$. The convergence is very slow near the critical line: for
 $\alpha = 0.55$ the error decreases only by a factor $10^{0.1} \approx 1.26$ per decade,
 so that for moderate $n$ the behaviour for $\alpha$ slightly above $1/2$ is hard to tell
@@ -875,8 +904,17 @@ $\alpha = 0.50, 0.51, \dots, 1.00$, compared with $1 - 2\alpha$ (dashed).}
 These observations must be read with care. By Proposition~\ref{main-prop}, a proof that
 $s_n(\alpha) \to 0$ for some $\alpha < 1$ would give a zero-free half-plane
 $\mathbb{C}_\alpha$, far beyond the known zero-free regions of $\zeta$. The behaviour
-observed is the one expected under RH, under which $M_1(n) = O(n^{-1/2+\varepsilon})$,
-but no finite computation can rule out the alternative: by Theorem~\ref{thm:lower}, a
+observed is the one expected under RH. Indeed, by Remark~\ref{rem:exact},
+$f_n = 1 + S_n^{*} - M_1(n)\{1/x\}$ on $(0,1]$ with
+$S_n^{*}(x) = \sum_{k \leq n} \mu(k)\{1/(kx)\}$, and if RH holds the estimates of
+Balazard and Saias~\cite[Lemmes~4 et~5]{Balazard} give
+$\int_0^1 |1 + S_n^{*}(x)|^2 x^{2\alpha-1}\,dx \ll_\alpha n^{-(\alpha-1/2)/3}$ for
+$1/2 < \alpha \leq 1$; together with $M_1(n) = O(n^{-1/2+\varepsilon})$, this yields
+$s_n(\alpha) = O(n^{-(\alpha-1/2)/3})$, and in particular $s_n(\alpha) \to 0$, for
+every $\alpha > 1/2$. The decay like $n^{1-2\alpha}$ observed above is much faster,
+and matches the order of the
+lower bound~\eqref{eq:lowerM1}. Nevertheless, no finite computation can rule out the
+alternative: by Theorem~\ref{thm:lower}, a
 zero $\rho$ with $\mathrm{Re}\,\rho > \alpha$ only forces
 $s_n(\alpha) \geq 2(\mathrm{Re}\,\rho - \alpha)/|\rho|^2$, and since every zero with
 $|\mathrm{Im}\,\rho| \leq 3 \cdot 10^{12}$ lies on the critical line~\cite{platt}, this
@@ -977,12 +1015,26 @@ $5.1\%$ from the least-squares fit $21.99 \log n$ of~\cite[\S8]{BBLS}. This agre
 an independent check of the computation described in
 Subsection~\ref{subsec:method}.
 
-% TODO (antes del envio): completar segun las normas de la revista elegida y
-% descomentar.
-% \section*{Declarations}
-% \paragraph{Funding.} ...
-% \paragraph{Competing interests.} ...
-% \paragraph{Data and code availability.} ...
+\section*{Acknowledgements}
+The authors thank the Vice-Rectorate for Research, Outreach and Social Projection and
+the Applied Mathematics research group of the University of the Atlantic for providing
+the facilities of the Center for Mathematical Modeling, where this work was carried
+out.
+
+\section*{Disclosure statement}
+No potential conflict of interest was reported by the authors.
+
+\section*{Notes on contributors}
+\textit{J. Manzur} is a faculty member at the Department of Mathematics of the
+Universidad del Atl\'antico, working in operator theory on Hilbert spaces of analytic
+functions.
+
+\medskip
+\noindent
+\textit{G. Quintero} is a full-time faculty member at the Department of Mathematics of
+the Universidad del Atl\'antico. His expertise is in nonlinear optimization, with a
+focus on the development and analysis of numerical optimization methods and
+algorithms.
 
 % Output all pending figures and tables before the references.
 \FloatBarrier
@@ -1016,6 +1068,11 @@ Riemann hypothesis, Proc. Indian Acad. Sci. Math. Sci. 116 (2006) 137--146.
 M. Balazard, E. Saias, Notes sur la fonction $\zeta$ de Riemann, 1, Adv. Math. 139
 (1998) 310--321.
 
+\bibitem{BCF}
+S. Bettin, J. B. Conrey, D. W. Farmer, An optimal choice of Dirichlet polynomials for
+the Nyman--Beurling criterion, Proc. Steklov Inst. Math. 280 (2013), suppl.~2,
+S30--S36.
+
 \bibitem{beurling}
 A. Beurling, A closed problem related to the Riemann zeta-function, Proc. Natl. Acad.
 Sci. USA 41 (1955) 312--314.
@@ -1025,7 +1082,7 @@ J.-F. Burnol, A lower bound in an approximation problem involving the zeros of t
 Riemann zeta function, Adv. Math. 170 (2002) 56--70.
 
 \bibitem{noor-charles}
-A. Ghosh, K. Kremnitzer, W. Noor, C. F. Santos, Zero-free half-planes of the
+A. Ghosh, K. Kremnizer, S. W. Noor, C. F. Santos, Zero-free half-planes of the
 $\zeta$-function via spaces of analytic functions, Adv. Math. 455 (2024) 109872.
 
 \bibitem{2}
@@ -1067,3 +1124,4 @@ Adv. Math. 208 (2007) 905--908.
 
 
 \end{document}
+
